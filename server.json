@@ -1,0 +1,21 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.HaD0Yun/Gear",
+  "description": "Gear — MCP server for Godot Engine with 110+ tools, compact/dynamic profiles, LSP, DAP, screenshots, and runtime automation.",
+  "repository": {
+    "url": "https://github.com/HaD0Yun/Gear-godot-mcp",
+    "source": "github"
+  },
+  "version": "2.3.6",
+  "packages": [
+    {
+      "registryType": "npm",
+      "identifier": "Gear",
+      "version": "2.3.6",
+      "transport": {
+        "type": "stdio"
+      },
+      "runtimeHint": "npx"
+    }
+  ]
+}

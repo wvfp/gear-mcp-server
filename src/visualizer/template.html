@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Godot Project Map</title>
+<style>
+%%CSS%%
+</style>
+</head>
+<body>
+<!-- Toolbar -->
+<div id="toolbar">
+  <div class="toolbar-left">
+    <div class="logo">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+        <circle cx="12" cy="12" r="10" stroke="#8da5f3" stroke-width="2"/>
+        <path d="M12 6v12M6 12h12" stroke="#8da5f3" stroke-width="2"/>
+      </svg>
+      <span>Gear</span>
+    </div>
+    <div class="toolbar-divider"></div>
+    <div class="view-tabs">
+      <button class="active" data-view="scripts" onclick="switchView('scripts')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+          <polyline points="14,2 14,8 20,8"/>
+        </svg>
+        Scripts
+      </button>
+      <button data-view="scenes" onclick="switchView('scenes')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="3" width="7" height="7" rx="1"/>
+          <rect x="14" y="3" width="7" height="7" rx="1"/>
+          <rect x="14" y="14" width="7" height="7" rx="1"/>
+          <rect x="3" y="14" width="7" height="7" rx="1"/>
+        </svg>
+        Scenes
+      </button>
+      <button data-view="dependency" onclick="switchView('dependency')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="5" cy="12" r="3"/>
+          <circle cx="19" cy="12" r="3"/>
+          <path d="M8 12h8"/>
+        </svg>
+        Dependency
+      </button>
+    </div>
+  </div>
+  <div class="toolbar-center">
+    <div id="search-bar">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+      </svg>
+      <input type="text" id="search" placeholder="Search scripts, nodes, code..." />
+      <span class="stats" id="stats"></span>
+      <button id="refresh-btn" onclick="refreshProject()" title="Refresh (Ctrl+R)">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M23 4v6h-6M1 20v-6h6"/>
+          <path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+  <div class="toolbar-right">
+    <button class="toolbar-btn" onclick="toggleBookmarks()" title="Bookmarks">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"/>
+      </svg>
+    </button>
+    <button class="toolbar-btn" onclick="toggleDashboard()" title="Statistics Dashboard">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M18 20V10M12 20V4M6 20v-6"/>
+      </svg>
+    </button>
+    <button class="toolbar-btn" onclick="showKeyboardShortcuts()" title="Keyboard Shortcuts">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <rect x="2" y="4" width="20" height="16" rx="2"/>
+        <path d="M6 8h.001M10 8h.001M14 8h.001M18 8h.001M8 12h.001M12 12h.001M16 12h.001M18 16H6"/>
+      </svg>
+    </button>
+    <button class="toolbar-btn" onclick="showExportMenu()" title="Export/Import">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+      </svg>
+    </button>
+    <div class="toolbar-divider"></div>
+    <button class="toolbar-btn" onclick="toggleFullscreen()" title="Fullscreen">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M8 3H5a2 2 0 00-2 2v3m18 0V5a2 2 0 00-2-2h-3m0 18h3a2 2 0 002-2v-3M3 16v3a2 2 0 002 2h3"/>
+      </svg>
+    </button>
+  </div>
+</div>
+
+<!-- Filter Bar -->
+<div id="filter-bar">
+  <div class="filter-section">
+    <span class="filter-label">Type:</span>
+    <div class="filter-chips" id="type-filters">
+      <button class="chip active" data-type="all" onclick="filterByType('all')">All</button>
+      <button class="chip" data-type="node" onclick="filterByType('node')">Node</button>
+      <button class="chip" data-type="resource" onclick="filterByType('resource')">Resource</button>
+      <button class="chip" data-type="autoload" onclick="filterByType('autoload')">Autoload</button>
+    </div>
+  </div>
+  <div class="filter-section">
+    <span class="filter-label">Sort:</span>
+    <select id="sort-select" onchange="changeSortOrder(this.value)">
+      <option value="default">Default</option>
+      <option value="name">Name (A-Z)</option>
+      <option value="connections">Connections</option>
+      <option value="lines">Line Count</option>
+      <option value="modified">Recently Modified</option>
+    </select>
+  </div>
+  <div class="filter-section" id="bookmarks-filter" style="display:none">
+    <span class="filter-label">Bookmarks:</span>
+    <span id="bookmarks-count">0</span>
+  </div>
+</div>
+
+<!-- Legend -->
+<div id="legend">
+  <div class="legend-item"><div class="line" style="background:var(--edge-extends)"></div> extends</div>
+  <div class="legend-item"><div class="line" style="background:var(--edge-preload)"></div> preload</div>
+  <div class="legend-item"><div class="line edge-signal"></div> signal</div>
+  <div class="legend-divider"></div>
+  <div class="legend-item"><div class="node-indicator" style="background:#8da5f3"></div> Node</div>
+  <div class="legend-item"><div class="node-indicator" style="background:#8eef97"></div> Control</div>
+  <div class="legend-item"><div class="node-indicator" style="background:#8da5f3"></div> Node2D</div>
+  <div class="legend-item"><div class="node-indicator" style="background:#fc7f7f"></div> Node3D</div>
+</div>
+
+<!-- Zoom Controls -->
+<div id="zoom-controls">
+  <button onclick="zoomIn()" title="Zoom In (+)">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/><path d="M11 8v6"/><path d="M8 11h6"/>
+    </svg>
+  </button>
+  <div id="zoom-indicator" title="Click to reset">
+    <input type="text" class="zoom-input" id="zoom-text" value="100%" onchange="setCustomZoom(this.value)" onkeydown="if(event.key==='Enter'){this.blur()}">
+  </div>
+  <button onclick="zoomOut()" title="Zoom Out (-)">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/><path d="M8 11h6"/>
+    </svg>
+  </button>
+  <button onclick="fitToViewAll()" title="Fit to View (F)">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M8 3H5a2 2 0 00-2 2v3m18 0V5a2 2 0 00-2-2h-3m0 18h3a2 2 0 002-2v-3M3 16v3a2 2 0 002 2h3"/>
+    </svg>
+  </button>
+</div>
+
+<!-- Minimap -->
+<div id="minimap">
+  <div class="minimap-header">
+    <span>Overview</span>
+    <button onclick="toggleMinimap()" title="Close">×</button>
+  </div>
+  <canvas id="minimap-canvas" width="180" height="120"></canvas>
+  <div class="minimap-viewport" id="minimap-viewport"></div>
+</div>
+
+<!-- Statistics Dashboard -->
+<div id="dashboard" style="display:none">
+  <div class="dashboard-header">
+    <span>Project Statistics</span>
+    <button onclick="toggleDashboard()">×</button>
+  </div>
+  <div class="dashboard-grid">
+    <div class="stat-card">
+      <div class="stat-icon" style="background:rgba(137,180,250,0.2);color:#89b4fa">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+        </svg>
+      </div>
+      <div class="stat-info">
+        <div class="stat-value" id="stat-scripts">0</div>
+        <div class="stat-label">Scripts</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon" style="background:rgba(166,227,161,0.2);color:#a6e3a1">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="3" width="7" height="7" rx="1"/>
+          <rect x="14" y="3" width="7" height="7" rx="1"/>
+          <rect x="14" y="14" width="7" height="7" rx="1"/>
+          <rect x="3" y="14" width="7" height="7" rx="1"/>
+        </svg>
+      </div>
+      <div class="stat-info">
+        <div class="stat-value" id="stat-scenes">0</div>
+        <div class="stat-label">Scenes</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon" style="background:rgba(249,226,175,0.2);color:#f9e2af">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M18 20V10M12 20V4M6 20v-6"/>
+        </svg>
+      </div>
+      <div class="stat-info">
+        <div class="stat-value" id="stat-lines">0</div>
+        <div class="stat-label">Total Lines</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon" style="background:rgba(203,166,247,0.2);color:#cba6f7">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+        </svg>
+      </div>
+      <div class="stat-info">
+        <div class="stat-value" id="stat-connections">0</div>
+        <div class="stat-label">Connections</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon" style="background:rgba(249,173,159,0.2);color:#f5a97f">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+          <polyline points="22,6 12,13 2,6"/>
+        </svg>
+      </div>
+      <div class="stat-info">
+        <div class="stat-value" id="stat-signals">0</div>
+        <div class="stat-label">Signals</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon" style="background:rgba(148,226,213,0.2);color:#94e2d5">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="3"/>
+          <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/>
+        </svg>
+      </div>
+      <div class="stat-info">
+        <div class="stat-value" id="stat-functions">0</div>
+        <div class="stat-label">Functions</div>
+      </div>
+    </div>
+  </div>
+  <div class="dashboard-section">
+    <div class="section-title">Category Distribution</div>
+    <div class="category-bars" id="category-bars"></div>
+  </div>
+  <div class="dashboard-section">
+    <div class="section-title">Top Connected Scripts</div>
+    <div class="top-list" id="top-connected"></div>
+  </div>
+</div>
+
+<!-- Category Panel -->
+<div id="category-panel">
+  <div class="cat-header">
+    <span class="cat-title">Categories</span>
+    <div class="cat-controls">
+      <button class="cat-mode-btn" id="cat-mode-btn" onclick="toggleGroupMode()" title="Toggle grouped layout">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="3" width="7" height="7" rx="1"/>
+          <rect x="14" y="3" width="7" height="7" rx="1"/>
+          <rect x="14" y="14" width="7" height="7" rx="1"/>
+          <rect x="3" y="14" width="7" height="7" rx="1"/>
+        </svg>
+      </button>
+      <button class="cat-all-btn" onclick="toggleAllCategories()" title="Show/Hide all">All</button>
+    </div>
+  </div>
+  <div class="cat-list" id="cat-list"></div>
+</div>
+
+<!-- Changes Panel -->
+<div id="changes-panel">
+  <div class="changes-header">
+    <span class="changes-title">Changes</span>
+    <label class="changes-toggle">
+      <input type="checkbox" id="changes-toggle-input" checked onchange="toggleChangesVisible()">
+      <span class="changes-toggle-slider"></span>
+    </label>
+  </div>
+  <div class="changes-stats" id="changes-stats">
+    <div class="changes-stat-row" data-type="modified" onclick="filterByChangeType('modified')">
+      <span class="changes-dot" style="background:#f9e2af"></span>
+      <span class="changes-label">Modified</span>
+      <span class="changes-count" id="changes-modified-count">0</span>
+    </div>
+    <div class="changes-stat-row" data-type="added" onclick="filterByChangeType('added')">
+      <span class="changes-dot" style="background:#a6e3a1"></span>
+      <span class="changes-label">Added</span>
+      <span class="changes-count" id="changes-added-count">0</span>
+    </div>
+    <div class="changes-stat-row" data-type="untracked" onclick="filterByChangeType('untracked')">
+      <span class="changes-dot" style="background:#89b4fa"></span>
+      <span class="changes-label">Untracked</span>
+      <span class="changes-count" id="changes-untracked-count">0</span>
+    </div>
+    <div class="changes-stat-row" data-type="new" onclick="filterByChangeType('new')">
+      <span class="changes-dot" style="background:#cdd6f4"></span>
+      <span class="changes-label">New</span>
+      <span class="changes-count" id="changes-new-count">0</span>
+    </div>
+  </div>
+  <div class="changes-total" id="changes-total">0 changed files</div>
+</div>
+
+<!-- Timeline Panel -->
+<div id="timeline-panel">
+  <div class="tl-header" onclick="toggleTimelinePanel()">
+    <span class="tl-title">Activity</span>
+    <span class="tl-count" id="tl-count">0</span>
+    <svg class="tl-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <polyline points="6 9 12 15 18 9"/>
+    </svg>
+  </div>
+  <div class="tl-body" id="tl-body">
+    <div class="tl-empty" id="tl-empty">No actions recorded yet</div>
+    <div class="tl-list" id="tl-list"></div>
+  </div>
+</div>
+
+<!-- Bookmarks Panel -->
+<div id="bookmarks-panel" style="display:none">
+  <div class="bp-header">
+    <span>Bookmarks</span>
+    <button onclick="clearAllBookmarks()">Clear All</button>
+  </div>
+  <div class="bp-list" id="bp-list">
+    <div class="bp-empty">No bookmarks yet</div>
+  </div>
+</div>
+
+<!-- Scene Back Button -->
+<div id="scene-back-btn" style="display:none" onclick="goBackToSceneOverview()">
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="M19 12H5M12 19l-7-7 7-7"/>
+  </svg>
+  <span>← Back</span>
+  <span class="scene-name"></span>
+</div>
+
+<!-- Detail Panel -->
+<div id="detail-panel">
+  <div id="panel-resize-handle"></div>
+  <div class="panel-header">
+    <button class="close-btn" onclick="closePanel()">&times;</button>
+    <h2 id="panel-title"></h2>
+    <div class="path" id="panel-path"></div>
+    <div class="panel-actions">
+      <button onclick="toggleNodeBookmark()" title="Bookmark" id="bookmark-btn">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"/>
+        </svg>
+      </button>
+      <button onclick="openInEditor()" title="Open in Editor">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/>
+          <polyline points="15,3 21,3 21,9"/>
+          <line x1="10" y1="14" x2="21" y2="3"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+  <div class="panel-body" id="panel-body"></div>
+</div>
+
+<!-- Context Menu (Scripts) -->
+<div id="context-menu">
+  <div class="menu-item" onclick="createNewScript()">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+      <line x1="12" y1="18" x2="12" y2="12"/>
+      <line x1="9" y1="15" x2="15" y2="15"/>
+    </svg>
+    New Script
+  </div>
+  <div class="menu-item" onclick="createNewScene()">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <rect x="3" y="3" width="7" height="7" rx="1"/>
+      <line x1="12" y1="8" x2="12" y2="16"/>
+      <line x1="8" y1="12" x2="16" y2="12"/>
+    </svg>
+    New Scene
+  </div>
+  <div class="menu-divider"></div>
+  <div class="menu-item" onclick="centerOnSelected()">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <circle cx="12" cy="12" r="10"/>
+      <circle cx="12" cy="12" r="3"/>
+    </svg>
+    Center View
+  </div>
+  <div class="menu-item" onclick="toggleNodeBookmark()">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"/>
+    </svg>
+    Toggle Bookmark
+  </div>
+  <div class="menu-divider"></div>
+  <div class="menu-item" onclick="copyPath()">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <rect x="9" y="9" width="13" height="13" rx="2"/>
+      <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/>
+    </svg>
+    Copy Path
+  </div>
+  <div class="menu-item" onclick="showInExplorer()">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/>
+    </svg>
+    Show in Explorer
+  </div>
+  <div class="menu-divider"></div>
+  <div class="menu-item" onclick="refreshProject()">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M23 4v6h-6M1 20v-6h6"/>
+    </svg>
+    Refresh
+  </div>
+  <div class="menu-item" onclick="resetLayout()">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <polyline points="1 4 1 10 7 10"/>
+      <path d="M3.51 15a9 9 0 102.13-9.36L1 10"/>
+    </svg>
+    Reset Layout
+  </div>
+</div>
+
+<!-- Context Menu (Scene Nodes) -->
+<div id="scene-context-menu">
+  <div class="menu-item" onclick="sceneNodeAction('add_child')">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <circle cx="12" cy="12" r="10"/>
+      <line x1="12" y1="8" x2="12" y2="16"/>
+      <line x1="8" y1="12" x2="16" y2="12"/>
+    </svg>
+    Add Child Node
+  </div>
+  <div class="menu-item" onclick="sceneNodeAction('rename')">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/>
+      <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/>
+    </svg>
+    Rename
+  </div>
+  <div class="menu-item" onclick="sceneNodeAction('duplicate')">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <rect x="9" y="9" width="13" height="13" rx="2"/>
+      <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/>
+    </svg>
+    Duplicate
+  </div>
+  <div class="menu-divider"></div>
+  <div class="menu-item" onclick="sceneNodeAction('move_up')">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <polyline points="18 15 12 9 6 15"/>
+    </svg>
+    Move Up
+  </div>
+  <div class="menu-item" onclick="sceneNodeAction('move_down')">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <polyline points="6 9 12 15 18 9"/>
+    </svg>
+    Move Down
+  </div>
+  <div class="menu-divider"></div>
+  <div class="menu-item danger" onclick="sceneNodeAction('delete')">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <polyline points="3 6 5 6 21 6"/>
+      <path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/>
+    </svg>
+    Delete
+  </div>
+</div>
+
+<!-- Usage Panel -->
+<div id="usage-float-panel">
+  <div class="ufp-header" id="ufp-header">
+    <div class="ufp-info">
+      <div class="ufp-title" id="ufp-title">Delete</div>
+      <div class="ufp-count" id="ufp-count"></div>
+    </div>
+    <div class="ufp-buttons">
+      <button class="refresh-btn" onclick="refreshUsages()" title="Re-scan">↻</button>
+      <button class="close-btn" onclick="closeUsagePanel()">×</button>
+    </div>
+  </div>
+  <div class="ufp-list" id="ufp-list"></div>
+  <div class="ufp-actions">
+    <button class="cancel" onclick="closeUsagePanel()">Cancel</button>
+    <button class="delete" id="ufp-delete-btn">Delete Anyway</button>
+  </div>
+  <div class="ufp-resize" id="ufp-resize"></div>
+</div>
+
+<!-- New Script Modal -->
+<div id="new-script-modal" class="modal" style="display:none">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>Create New Script</h3>
+      <button class="close-btn" onclick="closeNewScriptModal()">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label>Script Path</label>
+        <input type="text" id="new-script-path" placeholder="res://scripts/my_script.gd">
+      </div>
+      <div class="form-group">
+        <label>Extends</label>
+        <select id="new-script-extends">
+          <option value="Node">Node</option>
+          <option value="Node2D">Node2D</option>
+          <option value="Node3D">Node3D</option>
+          <option value="CharacterBody2D">CharacterBody2D</option>
+          <option value="CharacterBody3D">CharacterBody3D</option>
+          <option value="RigidBody2D">RigidBody2D</option>
+          <option value="Area2D">Area2D</option>
+          <option value="Control">Control</option>
+          <option value="Resource">Resource</option>
+          <option value="RefCounted">RefCounted</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Class Name (optional)</label>
+        <input type="text" id="new-script-classname" placeholder="MyClass">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="cancel" onclick="closeNewScriptModal()">Cancel</button>
+      <button class="confirm" onclick="submitNewScript()">Create</button>
+    </div>
+  </div>
+</div>
+
+<!-- Keyboard Shortcuts Modal -->
+<div id="shortcuts-modal" class="modal" style="display:none">
+  <div class="modal-content modal-shortcuts">
+    <div class="modal-header">
+      <h3>Keyboard Shortcuts</h3>
+      <button class="close-btn" onclick="closeShortcutsModal()">×</button>
+    </div>
+    <div class="shortcuts-grid">
+      <div class="shortcut-group">
+        <div class="shortcut-title">Navigation</div>
+        <div class="shortcut"><kbd>Space</kbd><span>Drag to pan</span></div>
+        <div class="shortcut"><kbd>Scroll</kbd><span>Zoom in/out</span></div>
+        <div class="shortcut"><kbd>F</kbd><span>Fit all to view</span></div>
+        <div class="shortcut"><kbd>0</kbd><span>Reset zoom to 100%</span></div>
+        <div class="shortcut"><kbd>Home</kbd><span>Center on selected</span></div>
+      </div>
+      <div class="shortcut-group">
+        <div class="shortcut-title">Selection</div>
+        <div class="shortcut"><kbd>Click</kbd><span>Select node</span></div>
+        <div class="shortcut"><kbd>Ctrl+Click</kbd><span>Multi-select</span></div>
+        <div class="shortcut"><kbd>Escape</kbd><span>Deselect / Close panel</span></div>
+      </div>
+      <div class="shortcut-group">
+        <div class="shortcut-title">Actions</div>
+        <div class="shortcut"><kbd>Ctrl+F</kbd><span>Focus search</span></div>
+        <div class="shortcut"><kbd>Ctrl+R</kbd><span>Refresh project</span></div>
+        <div class="shortcut"><kbd>Ctrl+B</kbd><span>Toggle bookmarks</span></div>
+        <div class="shortcut"><kbd>Delete</kbd><span>Delete selected (script)</span></div>
+      </div>
+      <div class="shortcut-group">
+        <div class="shortcut-title">Views</div>
+        <div class="shortcut"><kbd>1</kbd><span>Scripts view</span></div>
+        <div class="shortcut"><kbd>2</kbd><span>Scenes view</span></div>
+        <div class="shortcut"><kbd>M</kbd><span>Toggle minimap</span></div>
+        <div class="shortcut"><kbd>D</kbd><span>Toggle dashboard</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Export Menu -->
+<div id="export-menu" class="dropdown-menu" style="display:none">
+  <div class="menu-item" onclick="exportAsJSON()">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+      <polyline points="14,2 14,8 20,8"/>
+    </svg>
+    Export as JSON
+  </div>
+  <div class="menu-item" onclick="exportAsPNG()">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <rect x="3" y="3" width="18" height="18" rx="2"/>
+      <circle cx="8.5" cy="8.5" r="1.5"/>
+      <polyline points="21,15 16,10 5,21"/>
+    </svg>
+    Export as PNG
+  </div>
+  <div class="menu-item" onclick="importLayout()">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+    </svg>
+    Import Layout
+  </div>
+  <div class="menu-divider"></div>
+  <div class="menu-item" onclick="saveLayout()">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/>
+      <polyline points="17,21 17,13 7,13 7,21"/>
+      <polyline points="7,3 7,8 15,8"/>
+    </svg>
+    Save Current Layout
+  </div>
+  <div class="menu-item" onclick="loadLayout()">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M3 15v4c0 1.1.9 2 2 2h14a2 2 0 002-2v-4M17 8l-5-5-5 5M12 3v12"/>
+    </svg>
+    Load Saved Layout
+  </div>
+</div>
+
+<canvas id="canvas"></canvas>
+
+<script>
+%%SCRIPT%%
+</script>
+</body>
+</html>
