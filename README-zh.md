@@ -6,53 +6,14 @@
 [![](https://img.shields.io/badge/TypeScript-3178C6?style=flat&logo=typescript&logoColor=white 'TypeScript')](https://www.typescriptlang.org/)
 [![npm](https://img.shields.io/npm/v/Gear?style=flat&logo=npm&logoColor=white 'npm')](https://www.npmjs.com/package/Gear)
 
-[![](https://img.shields.io/github/last-commit/HaD0Yun/Gear-godot-mcp 'Last Commit')](https://github.com/HaD0Yun/Gear-godot-mcp/commits/main)
-[![](https://img.shields.io/github/stars/HaD0Yun/Gear-godot-mcp 'Stars')](https://github.com/HaD0Yun/Gear-godot-mcp/stargazers)
-[![](https://img.shields.io/github/forks/HaD0Yun/Gear-godot-mcp 'Forks')](https://github.com/HaD0Yun/Gear-godot-mcp/network/members)
+[![](https://img.shields.io/github/last-commit/wvfp/Gear-godot-mcp 'Last Commit')](https://github.com/wvfp/Gear-godot-mcp/commits/main)
+[![](https://img.shields.io/github/stars/wvfp/Gear-godot-mcp 'Stars')](https://github.com/wvfp/Gear-godot-mcp/stargazers)
+[![](https://img.shields.io/github/forks/wvfp/Gear-godot-mcp 'Forks')](https://github.com/wvfp/Gear-godot-mcp/network/members)
 [![](https://img.shields.io/badge/License-MIT-red.svg 'MIT License')](https://opensource.org/licenses/MIT)
 
 🌐 **选择语言**: [English](README.md) | [한국어](README-ko.md) | **简体中文** | [日本語](README-ja.md) | [Deutsch](README-de.md) | [Português](README-pt_BR.md)
 
-```text
-                           (((((((             (((((((                          
-                        (((((((((((           (((((((((((                      
-                        (((((((((((((       (((((((((((((                       
-                        (((((((((((((((((((((((((((((((((                       
-                        (((((((((((((((((((((((((((((((((                       
-         (((((      (((((((((((((((((((((((((((((((((((((((((      (((((        
-       (((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((      
-     ((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((    
-    ((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((    
-      (((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((     
-        (((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((       
-         (((((((((((@@@@@@@(((((((((((((((((((((((((((@@@@@@@(((((((((((        
-         (((((((((@@@@,,,,,@@@(((((((((((((((((((((@@@,,,,,@@@@(((((((((        
-         ((((((((@@@,,,,,,,,,@@(((((((@@@@@(((((((@@,,,,,,,,,@@@((((((((        
-         ((((((((@@@,,,,,,,,,@@(((((((@@@@@(((((((@@,,,,,,,,,@@@((((((((        
-         (((((((((@@@,,,,,,,@@((((((((@@@@@((((((((@@,,,,,,,@@@(((((((((        
-         ((((((((((((@@@@@@(((((((((((@@@@@(((((((((((@@@@@@((((((((((((        
-         (((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((        
-         (((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((        
-         @@@@@@@@@@@@@((((((((((((@@@@@@@@@@@@@((((((((((((@@@@@@@@@@@@@        
-         ((((((((( @@@(((((((((((@@(((((((((((@@(((((((((((@@@ (((((((((        
-         (((((((((( @@((((((((((@@@(((((((((((@@@((((((((((@@ ((((((((((        
-          (((((((((((@@@@@@@@@@@@@@(((((((((((@@@@@@@@@@@@@@(((((((((((         
-           (((((((((((((((((((((((((((((((((((((((((((((((((((((((((((          
-              (((((((((((((((((((((((((((((((((((((((((((((((((((((             
-                 (((((((((((((((((((((((((((((((((((((((((((((((                
-                        (((((((((((((((((((((((((((((((((                       
-                                                                                
-
-
-        /$$$$$$             /$$$$$$$                      /$$      
-       /$$__  $$           | $$__  $$                    | $$      
-      | $$  \__/  /$$$$$$ | $$  \ $$ /$$$$$$   /$$$$$$$ | $$  /$$/
-      | $$ /$$$$//$$__  $$| $$$$$$$//$$__  $$ |____  $$ | $$ /$$/ 
-      | $$|_  $$| $$  \ $$| $$____/| $$$$$$$$  /$$$$$$$ | $$$$$/  
-      | $$  \ $$| $$  | $$| $$     | $$_____/ /$$__  $$ | $$  $$  
-      |  $$$$$$/|  $$$$$$/| $$     |  $$$$$$ |  $$$$$$$ | $$\  $$ 
-       \______/  \______/ |__/      \______/  \_______/ |__/ \__/ 
-```
+![Gear Logo](assets/svg/gear-logo.svg)
 
 **最全面的 Godot 引擎 Model Context Protocol (MCP) 服务器 — 让 AI 助手能够以前所未有的深度和精准度构建、修改和调试 Godot 游戏。**
 
@@ -63,6 +24,12 @@
 ## 为什么选择 Gear？
 
 ### 🚀 革新您的游戏开发工作流程
+
+![Architecture](assets/svg/architecture.svg)
+
+![Tools Overview](assets/svg/tools-overview.svg)
+
+![Compact Mode](assets/svg/compact-mode.svg)
 
 Gear 不仅仅是一个工具 — 它是 AI 助手与游戏引擎交互方式的**范式转变**：
 
@@ -344,7 +311,7 @@ AI 在实际项目中构建工作示例，而不只是解释。
 
 **Linux / macOS**
 ```bash
-curl -sL https://raw.githubusercontent.com/HaD0Yun/Gear-godot-mcp/main/install.sh | bash
+curl -sL https://raw.githubusercontent.com/wvfp/Gear-godot-mcp/main/install.sh | bash
 ```
 
 此脚本将：
@@ -375,7 +342,7 @@ Gear
 #### 第一步：安装和构建
 
 ```bash
-git clone https://github.com/HaD0Yun/Gear-godot-mcp.git
+git clone https://github.com/wvfp/Gear-godot-mcp.git
 cd godot-mcp
 npm install
 npm run build
@@ -490,7 +457,7 @@ npm run build
 **Linux / macOS：**
 ```bash
 # 在您的 Godot 项目文件夹中运行
-curl -sL https://raw.githubusercontent.com/HaD0Yun/Gear-godot-mcp/main/install-addon.sh | bash
+curl -sL https://raw.githubusercontent.com/wvfp/Gear-godot-mcp/main/install-addon.sh | bash
 ```
 
 **手动安装：**
@@ -561,4 +528,4 @@ MIT 许可证 - 详情请参阅 [LICENSE](LICENSE)。
 ## 致谢
 
 - 原始 MCP 服务器由 [Coding-Solo](https://github.com/Coding-Solo/godot-mcp) 创建
-- 自动重载插件和统一包由 [HaD0Yun](https://github.com/HaD0Yun) 开发
+- 自动重载插件和统一包由 [wvfp](https://github.com/wvfp) 开发

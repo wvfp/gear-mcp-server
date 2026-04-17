@@ -81,7 +81,7 @@ async function backgroundCheck(): Promise<void> {
 function printUpdateBox(current: string, latest: string): void {
   const line1 = `  🚀 Gear v${latest} available! (current: v${current})`;
   const line2 = `  npm update -g Gear`;
-  const line3 = `  https://github.com/HaD0Yun/Gear-godot-mcp/releases`;
+  const line3 = `  https://github.com/wvfp/Gear-godot-mcp/releases`;
   const maxLen = Math.max(line1.length, line2.length, line3.length) + 2;
   const pad = (s: string) => s + ' '.repeat(Math.max(0, maxLen - s.length));
 

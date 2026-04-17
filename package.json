@@ -1,7 +1,7 @@
 {
   "name": "gear-godot-mcp",
   "version": "2.3.6",
-  "mcpName": "io.github.HaD0Yun/gear-godot-mcp",
+  "mcpName": "io.github.wvfp/gear-godot-mcp",
   "description": "Gear — MCP server for Godot Engine with 110+ tools, compact/dynamic profiles, GDScript LSP, DAP debugger, screenshots, input injection, and CC0 asset search.",
   "type": "module",
   "main": "./build/index.js",
@@ -49,6 +49,7 @@
     "@types/node": "^20.11.24",
     "@types/ws": "^8.5.12",
     "esbuild": "^0.24.2",
+    "sharp": "^0.34.5",
     "typescript": "^5.3.3"
   },
   "overrides": {
@@ -59,19 +60,19 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/HaD0Yun/Gear-godot-mcp.git"
+    "url": "git+https://github.com/wvfp/Gear-godot-mcp.git"
   },
-  "homepage": "https://github.com/HaD0Yun/Gear-godot-mcp#readme",
+  "homepage": "https://github.com/wvfp/Gear-godot-mcp#readme",
   "bugs": {
-    "url": "https://github.com/HaD0Yun/Gear-godot-mcp/issues"
+    "url": "https://github.com/wvfp/Gear-godot-mcp/issues"
   },
   "author": {
-    "name": "HaD0Yun",
-    "url": "https://github.com/HaD0Yun"
+    "name": "wvfp",
+    "url": "https://github.com/wvfp"
   },
   "funding": {
     "type": "github",
-    "url": "https://github.com/sponsors/HaD0Yun"
+    "url": "https://github.com/sponsors/wvfp"
   },
   "keywords": [
     "gear",

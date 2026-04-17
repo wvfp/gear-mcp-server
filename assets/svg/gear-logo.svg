@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 100">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0d1117"/>
+      <stop offset="100%" style="stop-color:#161b22"/>
+    </linearGradient>
+    <linearGradient id="textGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#478cbf"/>
+      <stop offset="100%" style="stop-color:#79c0ff"/>
+    </linearGradient>
+    <linearGradient id="subGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#6e7681"/>
+      <stop offset="100%" style="stop-color:#8b949e"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="420" height="100" fill="url(#bgGrad)" rx="16"/>
+
+  <!-- Corner decorations -->
+  <circle cx="12" cy="12" r="3" fill="#478cbf" opacity="0.6"/>
+  <circle cx="24" cy="8" r="2" fill="#79c0ff" opacity="0.4"/>
+  <circle cx="408" cy="12" r="3" fill="#478cbf" opacity="0.6"/>
+  <circle cx="396" cy="8" r="2" fill="#79c0ff" opacity="0.4"/>
+  <circle cx="12" cy="88" r="3" fill="#478cbf" opacity="0.4"/>
+  <circle cx="408" cy="88" r="3" fill="#478cbf" opacity="0.4"/>
+
+  <!-- Godot Icon -->
+  <g transform="translate(30, 12)">
+    <g transform="scale(0.08)">
+      <path d="M105 673v33q407 354 814 0v-33z" fill="#fff"/>
+      <path fill="#478cbf" d="m105 673 152 14q12 1 15 14l4 67 132 10 8-61q2-11 15-15h162q13 4 15 15l8 61 132-10 4-67q3-13 15-14l152-14V427q30-39 56-81-35-59-83-108-43 20-82 47-40-37-88-64 7-51 8-102-59-28-123-42-26 43-46 89-49-7-98 0-20-46-46-89-64 14-123 42 1 51 8 102-48 27-88 64-39-27-82-47-48 49-83 108 26 42 56 81zm0 33v39c0 276 813 276 814 0v-39l-134 12-5 69q-2 10-14 13l-162 11q-12 0-16-11l-10-65H446l-10 65q-4 11-16 11l-162-11q-12-3-14-13l-5-69z"/>
+      <path d="M483 600c0 34 58 34 58 0v-86c0-34-58-34-58 0z" fill="#fff"/>
+      <circle cx="725" cy="526" r="90" fill="#fff"/>
+      <circle cx="299" cy="526" r="90" fill="#fff"/>
+    </g>
+    <g fill="#414042" transform="translate(0,0)scale(0.08)">
+      <circle cx="307" cy="532" r="60"/>
+      <circle cx="717" cy="532" r="60"/>
+    </g>
+  </g>
+
+  <!-- Divider line -->
+  <line x1="130" y1="20" x2="130" y2="80" stroke="#30363d" stroke-width="1" stroke-linecap="round"/>
+
+  <!-- Text -->
+  <g transform="translate(170, 30)">
+    <text y="14" fill="url(#textGrad)" font-family="Trebuchet MS, Arial Rounded MT Bold, Arial" font-size="32" font-weight="bold" letter-spacing="1">MCP</text>
+    <text y="36" fill="url(#subGrad)" font-family="Trebuchet MS, Arial Rounded MT Bold, Arial" font-size="16" font-weight="bold" letter-spacing="0.5">Server for Godot</text>
+    <text y="54" fill="#6e7681" font-family="Arial" font-size="11" letter-spacing="0.5">AI-Powered Development</text>
+  </g>
+
+  <!-- Decorative line -->
+  <line x1="145" y1="68" x2="200" y2="68" stroke="url(#textGrad)" stroke-width="2" stroke-linecap="round"/>
+
+  <!-- Small gear accent -->
+  <g transform="translate(355, 70)" opacity="0.3">
+    <circle r="10" fill="none" stroke="#478cbf" stroke-width="1.5"/>
+    <circle r="4" fill="#478cbf"/>
+  </g>
+</svg>

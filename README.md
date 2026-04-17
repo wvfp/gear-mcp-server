@@ -5,10 +5,20 @@
 [![](https://img.shields.io/badge/Node.js-339933?style=flat&logo=nodedotjs&logoColor=white 'Node.js')](https://nodejs.org/en/download/)
 [![](https://img.shields.io/badge/TypeScript-3178C6?style=flat&logo=typescript&logoColor=white 'TypeScript')](https://www.typescriptlang.org/)
 [![npm](https://img.shields.io/npm/v/gear-godot-mcp?style=flat&logo=npm&logoColor=white 'npm')](https://www.npmjs.com/package/gear-godot-mcp)
-[![](https://img.shields.io/github/stars/HaD0Yun/Gear-godot-mcp 'Stars')](https://github.com/HaD0Yun/Gear-godot-mcp/stargazers)
+[![](https://img.shields.io/github/stars/wvfp/Gear-godot-mcp 'Stars')](https://github.com/wvfp/Gear-godot-mcp/stargazers)
 [![](https://img.shields.io/badge/License-MIT-red.svg 'MIT License')](https://opensource.org/licenses/MIT)
 
+## MCP Server for Godot 4
+
+![Gear Logo](assets/svg/gear-logo.svg)
+
 **Gear 让 AI 助手可以直接运行、检查、修改和调试你的 Godot 项目。**
+
+---
+
+## 架构概览
+
+![Architecture](assets/svg/architecture.svg)
 
 ---
 
@@ -70,6 +80,14 @@ gear
 | **Token 高效** | 默认仅暴露 33 个核心工具，按需激活 |
 | **动态工具组** | 搜索工具时自动激活相关工具组 |
 | **深度集成** | ClassDB 查询、运行时检查、断点调试 |
+
+### 工具一览
+
+![Tools Overview](assets/svg/tools-overview.svg)
+
+### Compact 模式工作原理
+
+![Compact Mode](assets/svg/compact-mode.svg)
 
 ### 适用场景
 
@@ -138,7 +156,7 @@ gear
 ### 方式 C: 源码安装
 
 ```bash
-git clone https://github.com/HaD0Yun/Gear-godot-mcp.git
+git clone https://github.com/wvfp/Gear-godot-mcp.git
 cd Gear-godot-mcp
 npm install
 npm run build
@@ -148,6 +166,10 @@ node build/index.js
 ---
 
 ## 功能一览
+
+### 快速开始流程
+
+![Quickstart](assets/svg/quickstart-flow.svg)
 
 ### 场景编辑
 - 创建场景、添加/删除节点
@@ -213,5 +235,5 @@ MIT — 详见 [LICENSE](LICENSE)。
 ## 致谢
 
 - 原始 MCP 服务器来自 [Coding-Solo](https://github.com/Coding-Solo/godot-mcp)
-- Gear 增强功能由 [HaD0Yun](https://github.com/HaD0Yun) 开发
+- Gear 增强功能由 [wvfp](https://github.com/wvfp) 开发
 - 项目可视化功能受 [tomyud1/godot-mcp](https://github.com/tomyud1/godot-mcp) 启发

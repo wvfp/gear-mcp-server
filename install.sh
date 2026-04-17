@@ -4,7 +4,7 @@
 # One-click installation script
 #
 # Usage:
-#   curl -sL https://raw.githubusercontent.com/HaD0Yun/Gear-godot-mcp/main/install.sh | bash
+#   curl -sL https://raw.githubusercontent.com/wvfp/Gear-godot-mcp/main/install.sh | bash
 #
 # Options:
 #   -d, --dir PATH      Installation directory (default: ~/.local/share/godot-mcp)
@@ -196,7 +196,7 @@ install_repository() {
     else
         print_status "Cloning repository..."
         mkdir -p "$(dirname "$INSTALL_DIR")"
-        git clone https://github.com/HaD0Yun/Gear-godot-mcp.git "$INSTALL_DIR"
+        git clone https://github.com/wvfp/Gear-godot-mcp.git "$INSTALL_DIR"
         cd "$INSTALL_DIR"
     fi
     
@@ -332,9 +332,9 @@ main() {
     echo "  3. Start using Godot MCP!"
     echo ""
     echo "  For addon installation in your Godot project:"
-    echo -e "  ${GREEN}curl -sL https://raw.githubusercontent.com/HaD0Yun/Gear-godot-mcp/main/install-addon.sh | bash${NC}"
+    echo -e "  ${GREEN}curl -sL https://raw.githubusercontent.com/wvfp/Gear-godot-mcp/main/install-addon.sh | bash${NC}"
     echo ""
-    echo "For more info: https://github.com/HaD0Yun/Gear-godot-mcp"
+    echo "For more info: https://github.com/wvfp/Gear-godot-mcp"
 }
 
 main

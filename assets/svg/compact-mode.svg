@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 280">
+  <defs>
+    <linearGradient id="bgGrad4" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0d1117"/>
+      <stop offset="100%" style="stop-color:#161b22"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="700" height="280" fill="url(#bgGrad4)" rx="12"/>
+
+  <text x="350" y="30" text-anchor="middle" fill="#e6edf3" font-family="sans-serif" font-size="18" font-weight="bold">Compact 模式：按需激活工具组</text>
+
+  <!-- Left: Core tools -->
+  <g transform="translate(100, 140)">
+    <rect x="-85" y="-60" width="170" height="120" rx="10" fill="#21262d" stroke="#478cbf" stroke-width="2"/>
+    <text y="-30" text-anchor="middle" fill="#79c0ff" font-family="sans-serif" font-size="14" font-weight="bold">核心工具 (默认)</text>
+
+    <!-- Tool badges -->
+    <g transform="translate(-60, 0)">
+      <rect width="45" height="20" rx="4" fill="#1f6feb"/>
+      <text x="22" y="14" text-anchor="middle" fill="white" font-family="sans-serif" font-size="9">Scene</text>
+    </g>
+    <g transform="translate(0, 0)">
+      <rect width="45" height="20" rx="4" fill="#238636"/>
+      <text x="22" y="14" text-anchor="middle" fill="white" font-family="sans-serif" font-size="9">Script</text>
+    </g>
+    <g transform="translate(60, 0)">
+      <rect width="45" height="20" rx="4" fill="#238636"/>
+      <text x="22" y="14" text-anchor="middle" fill="white" font-family="sans-serif" font-size="9">Project</text>
+    </g>
+
+    <text y="40" text-anchor="middle" fill="#8b949e" font-family="sans-serif" font-size="11">33 tools always visible</text>
+    <rect x="-50" y="50" width="100" height="18" rx="4" fill="#478cbf"/>
+    <text y="63" text-anchor="middle" fill="white" font-family="sans-serif" font-size="10">Token Efficient</text>
+  </g>
+
+  <!-- Middle: Activation -->
+  <g transform="translate(350, 140)">
+    <text y="-50" text-anchor="middle" fill="#f9e2af" font-family="sans-serif" font-size="13" font-weight="bold">AI 搜索工具时</text>
+    <text y="-30" text-anchor="middle" fill="#f9e2af" font-family="monospace" font-size="12">tool.catalog("debug")</text>
+
+    <!-- Arrow -->
+    <g stroke="#478cbf" stroke-width="2">
+      <line x1="-80" y1="0" x2="-20" y2="0"/>
+      <polygon points="20,0 0,-5 0,5" fill="#478cbf"/>
+    </g>
+
+    <text y="40" text-anchor="middle" fill="#a6e3a1" font-family="sans-serif" font-size="11">→ 自动激活 dap 组</text>
+  </g>
+
+  <!-- Right: On-demand groups -->
+  <g transform="translate(580, 140)">
+    <rect x="-95" y="-60" width="190" height="120" rx="10" fill="#21262d" stroke="#8250df" stroke-width="2"/>
+    <text y="-30" text-anchor="middle" fill="#cba6f7" font-family="sans-serif" font-size="14" font-weight="bold">按需激活 (22 组)</text>
+
+    <g transform="translate(-75, 0)">
+      <rect width="40" height="18" rx="3" fill="#9e6a03"/>
+      <text x="20" y="13" text-anchor="middle" fill="white" font-family="sans-serif" font-size="8">dap</text>
+    </g>
+    <g transform="translate(-25, 0)">
+      <rect width="40" height="18" rx="3" fill="#8250df"/>
+      <text x="20" y="13" text-anchor="middle" fill="white" font-family="sans-serif" font-size="8">lsp</text>
+    </g>
+    <g transform="translate(25, 0)">
+      <rect width="40" height="18" rx="3" fill="#bf4b8a"/>
+      <text x="20" y="13" text-anchor="middle" fill="white" font-family="sans-serif" font-size="8">input</text>
+    </g>
+    <g transform="translate(55, 0)">
+      <rect width="40" height="18" rx="3" fill="#1f6feb"/>
+      <text x="20" y="13" text-anchor="middle" fill="white" font-family="sans-serif" font-size="8">scene</text>
+    </g>
+
+    <text y="25" text-anchor="middle" fill="#8b949e" font-family="sans-serif" font-size="10">+18 more groups</text>
+    <rect x="-55" y="40" width="110" height="18" rx="4" fill="#8250df"/>
+    <text y="53" text-anchor="middle" fill="white" font-family="sans-serif" font-size="10">78 extra tools</text>
+  </g>
+</svg>

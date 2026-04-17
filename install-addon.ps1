@@ -27,7 +27,7 @@ if (-not (Test-Path "addons")) {
     Write-Host "Created addons/ directory" -ForegroundColor Green
 }
 
-$repoUrl = "https://raw.githubusercontent.com/HaD0Yun/Gear-godot-mcp/main"
+$repoUrl = "https://raw.githubusercontent.com/wvfp/Gear-godot-mcp/main"
 
 # Function to download a file
 function Download-File {
@@ -196,4 +196,4 @@ Write-Host "1. Open your project in Godot" -ForegroundColor White
 Write-Host "2. Go to Project > Project Settings > Plugins" -ForegroundColor White
 Write-Host "3. Enable the installed addon(s), especially godot_mcp_editor for bridge-backed tools" -ForegroundColor White
 Write-Host ""
-Write-Host "For more info: https://github.com/HaD0Yun/Gear-godot-mcp" -ForegroundColor Gray
+Write-Host "For more info: https://github.com/wvfp/Gear-godot-mcp" -ForegroundColor Gray

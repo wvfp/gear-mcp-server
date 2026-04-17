@@ -33,7 +33,7 @@ function replaceVersionReferencesInReadme(content, nextVersion) {
   return content
     .replace(/(npx\s+-y\s+Gear@)(\d+\.\d+\.\d+(?:-[0-9A-Za-z-.]+)?)/g, `$1${nextVersion}`)
     .replace(/(npm\s+install\s+-g\s+Gear@)(\d+\.\d+\.\d+(?:-[0-9A-Za-z-.]+)?)/g, `$1${nextVersion}`)
-    .replace(/(https:\/\/raw\.githubusercontent\.com\/HaD0Yun\/godot-mcp\/v)(\d+\.\d+\.\d+)(\/install-addon\.(?:sh|ps1))/g, `$1${nextVersion}$3`);
+    .replace(/(https:\/\/raw\.githubusercontent\.com\/wvfp\/godot-mcp\/v)(\d+\.\d+\.\d+)(\/install-addon\.(?:sh|ps1))/g, `$1${nextVersion}$3`);
 }
 
 async function readJson(filePath) {

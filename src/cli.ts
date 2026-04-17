@@ -102,7 +102,7 @@ Usage:
 Shell hooks wrap these commands with update notifications:
   claude, codex, gemini, opencode, omc, omx
 
-More info: https://github.com/HaD0Yun/Gear-godot-mcp
+More info: https://github.com/wvfp/Gear-godot-mcp
 `.trim());
 }
 

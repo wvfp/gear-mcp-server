@@ -6,53 +6,14 @@
 [![](https://img.shields.io/badge/TypeScript-3178C6?style=flat&logo=typescript&logoColor=white 'TypeScript')](https://www.typescriptlang.org/)
 [![npm](https://img.shields.io/npm/v/Gear?style=flat&logo=npm&logoColor=white 'npm')](https://www.npmjs.com/package/Gear)
 
-[![](https://img.shields.io/github/last-commit/HaD0Yun/Gear-godot-mcp 'Last Commit')](https://github.com/HaD0Yun/Gear-godot-mcp/commits/main)
-[![](https://img.shields.io/github/stars/HaD0Yun/Gear-godot-mcp 'Stars')](https://github.com/HaD0Yun/Gear-godot-mcp/stargazers)
-[![](https://img.shields.io/github/forks/HaD0Yun/Gear-godot-mcp 'Forks')](https://github.com/HaD0Yun/Gear-godot-mcp/network/members)
+[![](https://img.shields.io/github/last-commit/wvfp/Gear-godot-mcp 'Last Commit')](https://github.com/wvfp/Gear-godot-mcp/commits/main)
+[![](https://img.shields.io/github/stars/wvfp/Gear-godot-mcp 'Stars')](https://github.com/wvfp/Gear-godot-mcp/stargazers)
+[![](https://img.shields.io/github/forks/wvfp/Gear-godot-mcp 'Forks')](https://github.com/wvfp/Gear-godot-mcp/network/members)
 [![](https://img.shields.io/badge/License-MIT-red.svg 'MIT License')](https://opensource.org/licenses/MIT)
 
 🌐 **Sprache wählen**: [English](README.md) | [한국어](README-ko.md) | [简体中文](README-zh.md) | [日本語](README-ja.md) | **Deutsch** | [Português](README-pt_BR.md)
 
-```text
-                           (((((((             (((((((                          
-                        (((((((((((           (((((((((((                      
-                        (((((((((((((       (((((((((((((                       
-                        (((((((((((((((((((((((((((((((((                       
-                        (((((((((((((((((((((((((((((((((                       
-         (((((      (((((((((((((((((((((((((((((((((((((((((      (((((        
-       (((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((      
-     ((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((    
-    ((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((    
-      (((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((     
-        (((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((       
-         (((((((((((@@@@@@@(((((((((((((((((((((((((((@@@@@@@(((((((((((        
-         (((((((((@@@@,,,,,@@@(((((((((((((((((((((@@@,,,,,@@@@(((((((((        
-         ((((((((@@@,,,,,,,,,@@(((((((@@@@@(((((((@@,,,,,,,,,@@@((((((((        
-         ((((((((@@@,,,,,,,,,@@(((((((@@@@@(((((((@@,,,,,,,,,@@@((((((((        
-         (((((((((@@@,,,,,,,@@((((((((@@@@@((((((((@@,,,,,,,@@@(((((((((        
-         ((((((((((((@@@@@@(((((((((((@@@@@(((((((((((@@@@@@((((((((((((        
-         (((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((        
-         (((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((        
-         @@@@@@@@@@@@@((((((((((((@@@@@@@@@@@@@((((((((((((@@@@@@@@@@@@@        
-         ((((((((( @@@(((((((((((@@(((((((((((@@(((((((((((@@@ (((((((((        
-         (((((((((( @@((((((((((@@@(((((((((((@@@((((((((((@@ ((((((((((        
-          (((((((((((@@@@@@@@@@@@@@(((((((((((@@@@@@@@@@@@@@(((((((((((         
-           (((((((((((((((((((((((((((((((((((((((((((((((((((((((((((          
-              (((((((((((((((((((((((((((((((((((((((((((((((((((((             
-                 (((((((((((((((((((((((((((((((((((((((((((((((                
-                        (((((((((((((((((((((((((((((((((                       
-                                                                                
-
-
-        /$$$$$$             /$$$$$$$                      /$$      
-       /$$__  $$           | $$__  $$                    | $$      
-      | $$  \__/  /$$$$$$ | $$  \ $$ /$$$$$$   /$$$$$$$ | $$  /$$/
-      | $$ /$$$$//$$__  $$| $$$$$$$//$$__  $$ |____  $$ | $$ /$$/ 
-      | $$|_  $$| $$  \ $$| $$____/| $$$$$$$$  /$$$$$$$ | $$$$$/  
-      | $$  \ $$| $$  | $$| $$     | $$_____/ /$$__  $$ | $$  $$  
-      |  $$$$$$/|  $$$$$$/| $$     |  $$$$$$ |  $$$$$$$ | $$\  $$ 
-       \______/  \______/ |__/      \______/  \_______/ |__/ \__/ 
-```
+![Gear Logo](assets/svg/gear-logo.svg)
 
 **Der umfassendste Model Context Protocol (MCP) Server für die Godot Engine — ermöglicht KI-Assistenten, Godot-Spiele mit beispielloser Tiefe und Präzision zu erstellen, zu modifizieren und zu debuggen.**
 
@@ -63,6 +24,12 @@
 ## Warum Gear?
 
 ### 🚀 Revolutionieren Sie Ihren Spielentwicklungs-Workflow
+
+![Architecture](assets/svg/architecture.svg)
+
+![Tools Overview](assets/svg/tools-overview.svg)
+
+![Compact Mode](assets/svg/compact-mode.svg)
 
 Gear ist nicht nur ein weiteres Werkzeug — es ist ein **Paradigmenwechsel** in der Art und Weise, wie KI-Assistenten mit Spielengines interagieren:
 
@@ -344,7 +311,7 @@ Handlungsorientierte Einblicke in Projektstruktur, ungenutzte Ressourcen und pot
 
 **Linux / macOS**
 ```bash
-curl -sL https://raw.githubusercontent.com/HaD0Yun/Gear-godot-mcp/main/install.sh | bash
+curl -sL https://raw.githubusercontent.com/wvfp/Gear-godot-mcp/main/install.sh | bash
 ```
 
 Dieses Skript wird:
@@ -375,7 +342,7 @@ Gear
 #### Schritt 1: Installieren und Bauen
 
 ```bash
-git clone https://github.com/HaD0Yun/Gear-godot-mcp.git
+git clone https://github.com/wvfp/Gear-godot-mcp.git
 cd godot-mcp
 npm install
 npm run build
@@ -490,7 +457,7 @@ Nach der Konfiguration können Sie Godot in natürlicher Sprache steuern:
 **Linux / macOS:**
 ```bash
 # Im Ordner Ihres Godot-Projekts ausführen
-curl -sL https://raw.githubusercontent.com/HaD0Yun/Gear-godot-mcp/main/install-addon.sh | bash
+curl -sL https://raw.githubusercontent.com/wvfp/Gear-godot-mcp/main/install-addon.sh | bash
 ```
 
 **Manuelle Installation:**
@@ -561,4 +528,4 @@ MIT-Lizenz - Details siehe [LICENSE](LICENSE).
 ## Credits
 
 - Originaler MCP-Server von [Coding-Solo](https://github.com/Coding-Solo/godot-mcp)
-- Auto-Reload-Plugin und vereinheitlichtes Paket von [HaD0Yun](https://github.com/HaD0Yun)
+- Auto-Reload-Plugin und vereinheitlichtes Paket von [wvfp](https://github.com/wvfp)

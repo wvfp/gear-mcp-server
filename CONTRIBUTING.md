@@ -7,7 +7,7 @@
 ## 开发环境设置
 
 ```bash
-git clone https://github.com/HaD0Yun/Gear-godot-mcp.git
+git clone https://github.com/wvfp/Gear-godot-mcp.git
 cd Gear-godot-mcp
 npm install
 npm run build

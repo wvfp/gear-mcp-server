@@ -1,0 +1,96 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0d1117"/>
+      <stop offset="100%" style="stop-color:#161b22"/>
+    </linearGradient>
+    <linearGradient id="gearGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#478cbf"/>
+      <stop offset="100%" style="stop-color:#79c0ff"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bg)"/>
+
+  <!-- Grid pattern -->
+  <g opacity="0.1">
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#478cbf" stroke-width="0.5"/>
+    </pattern>
+    <rect width="1200" height="630" fill="url(#grid)"/>
+  </g>
+
+  <!-- Left side: Godot Robot -->
+  <g transform="translate(180, 315)">
+    <!-- Robot body -->
+    <rect x="-60" y="-40" width="120" height="100" rx="10" fill="#21262d" stroke="#478cbf" stroke-width="2"/>
+    <!-- Robot head -->
+    <rect x="-40" y="-90" width="80" height="60" rx="8" fill="#21262d" stroke="#478cbf" stroke-width="2"/>
+    <!-- Robot eyes -->
+    <circle cx="-15" cy="-65" r="8" fill="#a6e3a1"/>
+    <circle cx="15" cy="-65" r="8" fill="#a6e3a1"/>
+    <!-- Robot antenna -->
+    <line x1="0" y1="-90" x2="0" y2="-110" stroke="#478cbf" stroke-width="3"/>
+    <circle cx="0" cy="-115" r="6" fill="#f9e2af"/>
+    <!-- Robot arms -->
+    <rect x="-90" y="-20" width="30" height="15" rx="5" fill="#478cbf"/>
+    <rect x="60" y="-20" width="30" height="15" rx="5" fill="#478cbf"/>
+    <!-- Robot legs -->
+    <rect x="-40" y="60" width="20" height="40" rx="5" fill="#478cbf"/>
+    <rect x="20" y="60" width="20" height="40" rx="5" fill="#478cbf"/>
+  </g>
+
+  <!-- Center: Gear icon with MCP connection -->
+  <g transform="translate(600, 315)" filter="url(#glow)">
+    <!-- Large gear -->
+    <g fill="url(#gearGrad)">
+      <path d="M0,-140 L20,-140 L25,-100 L45,-95 L80,-115 L95,-90 L65,-55 L85,-25 L120,-15 L120,15 L85,25 L65,55 L95,90 L80,115 L45,95 L25,100 L20,140 L-20,140 L-25,100 L-45,95 L-80,115 L-95,90 L-65,55 L-85,25 L-120,15 L-120,-15 L-85,-25 L-65,-55 L-95,-90 L-80,-115 L-45,-95 L-25,-100 L-20,-140 Z"/>
+    </g>
+    <!-- Inner circle -->
+    <circle r="70" fill="#0d1117" stroke="#478cbf" stroke-width="3"/>
+    <!-- MCP text -->
+    <text y="-15" text-anchor="middle" fill="#79c0ff" font-family="monospace" font-size="28" font-weight="bold">MCP</text>
+    <text y="20" text-anchor="middle" fill="#8b949e" font-family="sans-serif" font-size="14">Server</text>
+  </g>
+
+  <!-- Connection lines -->
+  <g stroke="#478cbf" stroke-width="2" fill="none" opacity="0.6">
+    <path d="M280,315 Q400,315 530,315" stroke-dasharray="8,4"/>
+    <path d="M670,315 Q800,315 920,315" stroke-dasharray="8,4"/>
+  </g>
+
+  <!-- Right side: Code/Tools symbols -->
+  <g transform="translate(920, 315)">
+    <!-- Terminal window -->
+    <rect x="-80" y="-80" width="160" height="120" rx="8" fill="#21262d" stroke="#30363d" stroke-width="2"/>
+    <rect x="-80" y="-80" width="160" height="25" rx="8" fill="#30363d"/>
+    <circle cx="-60" y="-67" r="5" fill="#f38ba8"/>
+    <circle cx="-45" y="-67" r="5" fill="#f9e2af"/>
+    <circle cx="-30" y="-67" r="5" fill="#a6e3a1"/>
+    <!-- Code lines -->
+    <rect x="-65" y="-45" width="60" height="8" rx="2" fill="#79c0ff" opacity="0.8"/>
+    <rect x="0" y="-45" width="40" height="8" rx="2" fill="#a6e3a1" opacity="0.8"/>
+    <rect x="-65" y="-30" width="80" height="8" rx="2" fill="#f9e2af" opacity="0.8"/>
+    <rect x="-65" y="-15" width="50" height="8" rx="2" fill="#cba6f7" opacity="0.8"/>
+    <rect x="0" y="-15" width="70" height="8" rx="2" fill="#89b4fa" opacity="0.8"/>
+    <!-- Tools count -->
+    <rect x="-60" y="55" width="120" height="35" rx="6" fill="#478cbf"/>
+    <text y="78" text-anchor="middle" fill="white" font-family="sans-serif" font-size="16" font-weight="bold">95+ Tools</text>
+  </g>
+
+  <!-- Bottom text -->
+  <text x="600" y="550" text-anchor="middle" fill="#e6edf3" font-family="sans-serif" font-size="32" font-weight="bold">Gear-Godot-MCP</text>
+  <text x="600" y="585" text-anchor="middle" fill="#8b949e" font-family="sans-serif" font-size="16">The Most Comprehensive MCP Server for Godot Engine</text>
+
+  <!-- Decorative elements -->
+  <circle cx="100" cy="100" r="80" fill="#478cbf" opacity="0.05"/>
+  <circle cx="1100" cy="530" r="120" fill="#478cbf" opacity="0.05"/>
+</svg>

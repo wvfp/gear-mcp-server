@@ -9,7 +9,7 @@
 import { commandExists, runCommand, STAR_PROMPTED_FILE, ensureGearDir } from './utils.js';
 import { existsSync, writeFileSync } from 'fs';
 
-const REPO = 'HaD0Yun/Gear-godot-mcp';
+const REPO = 'wvfp/Gear-godot-mcp';
 const REPO_URL = `https://github.com/${REPO}`;
 
 export async function starGear(): Promise<void> {

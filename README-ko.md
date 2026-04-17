@@ -5,14 +5,14 @@
 [![](https://img.shields.io/badge/Node.js-339933?style=flat&logo=nodedotjs&logoColor=white 'Node.js')](https://nodejs.org/en/download/)
 [![](https://img.shields.io/badge/TypeScript-3178C6?style=flat&logo=typescript&logoColor=white 'TypeScript')](https://www.typescriptlang.org/)
 [![npm](https://img.shields.io/npm/v/Gear?style=flat&logo=npm&logoColor=white 'npm')](https://www.npmjs.com/package/Gear)
-[![](https://img.shields.io/github/last-commit/HaD0Yun/Gear-godot-mcp 'Last Commit')](https://github.com/HaD0Yun/Gear-godot-mcp/commits/main)
-[![](https://img.shields.io/github/stars/HaD0Yun/Gear-godot-mcp 'Stars')](https://github.com/HaD0Yun/Gear-godot-mcp/stargazers)
-[![](https://img.shields.io/github/forks/HaD0Yun/Gear-godot-mcp 'Forks')](https://github.com/HaD0Yun/Gear-godot-mcp/network/members)
+[![](https://img.shields.io/github/last-commit/wvfp/Gear-godot-mcp 'Last Commit')](https://github.com/wvfp/Gear-godot-mcp/commits/main)
+[![](https://img.shields.io/github/stars/wvfp/Gear-godot-mcp 'Stars')](https://github.com/wvfp/Gear-godot-mcp/stargazers)
+[![](https://img.shields.io/github/forks/wvfp/Gear-godot-mcp 'Forks')](https://github.com/wvfp/Gear-godot-mcp/network/members)
 [![](https://img.shields.io/badge/License-MIT-red.svg 'MIT License')](https://opensource.org/licenses/MIT)
 
 🌐 **언어**: [English](README.md) | **한국어** | [简体中文](README-zh.md) | [日本語](README-ja.md) | [Deutsch](README-de.md) | [Português](README-pt_BR.md)
 
-![Gear Hero](assets/Gear-hero-v2.png)
+![Gear Logo](assets/svg/gear-logo.svg)
 
 **Gear은 Godot용 MCP 서버로, AI 어시스턴트가 실제 프로젝트를 실행·검사·수정·디버깅까지 end-to-end로 수행할 수 있게 해줍니다.**
 
@@ -21,6 +21,12 @@
 ---
 
 ## 왜 Gear인가 (핵심)
+
+![Architecture](assets/svg/architecture.svg)
+
+![Tools Overview](assets/svg/tools-overview.svg)
+
+![Compact Mode](assets/svg/compact-mode.svg)
 
 - **실프로젝트 피드백 루프**: 실행 → 로그 확인 → 수정까지 한 흐름으로 처리
 - **110+ 도구 지원: 33개 기본 도구 + 22개 동적 툴 그룹 (78개 추가 도구를 필요할 때 활성화)**: 씬/스크립트/리소스/런타임/LSP/DAP/입력/에셋 전반 커버
@@ -74,7 +80,7 @@ Gear
 ### 2) 소스에서 설치
 
 ```bash
-git clone https://github.com/HaD0Yun/Gear-godot-mcp.git
+git clone https://github.com/wvfp/Gear-godot-mcp.git
 cd godot-mcp
 npm install
 npm run build
@@ -204,7 +210,7 @@ Godot 자동 감지가 안 되면 `GODOT_PATH`를 지정하세요.
 Godot 프로젝트 루트에서 설치:
 
 ```bash
-curl -sL https://raw.githubusercontent.com/HaD0Yun/Gear-godot-mcp/main/install-addon.sh | bash
+curl -sL https://raw.githubusercontent.com/wvfp/Gear-godot-mcp/main/install-addon.sh | bash
 ```
 
 설치 후 **Project Settings → Plugins**에서 활성화하세요.
@@ -236,4 +242,4 @@ MIT — [LICENSE](LICENSE) 참고.
 ## Credits
 
 - Original MCP server by [Coding-Solo](https://github.com/Coding-Solo/godot-mcp)
-- Gear enhancements by [HaD0Yun](https://github.com/HaD0Yun)
+- Gear enhancements by [wvfp](https://github.com/wvfp)
