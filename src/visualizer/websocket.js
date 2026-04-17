@@ -2,6 +2,8 @@
  * WebSocket connection for real-time communication with Godot
  */
 
+import { addToolCall, updateToolCall } from './state.js';
+
 let ws = null;
 let wsConnected = false;
 const pendingRequests = new Map();
@@ -19,6 +21,16 @@ function handleActionEvent(msg) {
       listener(msg);
     } catch (err) {
       console.error('[visualizer] Action listener error:', err);
+    }
+  }
+}
+
+function handleToolCallEvent(msg) {
+  for (const listener of actionListeners) {
+    try {
+      listener({ type: 'tool_call', ...msg });
+    } catch (err) {
+      console.error('[visualizer] Tool call listener error:', err);
     }
   }
 }
@@ -45,6 +57,16 @@ export function connectWebSocket() {
   ws.onmessage = (event) => {
     try {
       const msg = JSON.parse(event.data);
+
+      if (msg.type === 'tool_call') {
+        if (msg.data.status === 'pending') {
+          addToolCall(msg.data);
+        } else {
+          updateToolCall(msg.data.id, msg.data);
+        }
+        handleToolCallEvent(msg.data);
+        return;
+      }
 
       if (msg.type === 'action_event' && !msg.id) {
         handleActionEvent(msg);

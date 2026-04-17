@@ -5,10 +5,12 @@ class_name MCPEditorClient
 signal connected
 signal disconnected
 signal tool_requested(request_id: String, tool_name: String, args: Dictionary)
+signal tool_call_logged(call_data: Dictionary)
 
 const DEFAULT_URL := "ws://127.0.0.1:6505/godot"
 const RECONNECT_DELAY := 3.0
 const MAX_RECONNECT_DELAY := 30.0
+const MAX_TOOL_CALL_HISTORY := 100
 
 var socket: WebSocketPeer = WebSocketPeer.new()
 var server_url: String = DEFAULT_URL
@@ -18,6 +20,8 @@ var _current_reconnect_delay := RECONNECT_DELAY
 var _should_reconnect := true
 var _project_path: String
 var _initialized := false
+
+var _tool_call_history: Array = []
 
 
 func _ready() -> void:
@@ -149,6 +153,7 @@ func _handle_message(json_string: String) -> void:
 			var tool_name: String = message.get("tool", "")
 			var args: Dictionary = message.get("args", {})
 			tool_requested.emit(request_id, tool_name, args)
+			_log_tool_call(request_id, tool_name, args)
 
 		_:
 			pass
@@ -167,6 +172,36 @@ func send_tool_result(request_id: String, success: bool, result = null, error: S
 		response["error"] = error
 
 	_send_message(response)
+	_update_tool_call_result(request_id, success, result, error)
+
+
+func _log_tool_call(request_id: String, tool_name: String, args: Dictionary) -> void:
+	var call_data := {
+		"id": request_id,
+		"tool": tool_name,
+		"args": args,
+		"timestamp": Time.get_datetime_string_from_system(),
+		"status": "pending"
+	}
+	_tool_call_history.push_front(call_data)
+	if _tool_call_history.size() > MAX_TOOL_CALL_HISTORY:
+		_tool_call_history.resize(MAX_TOOL_CALL_HISTORY)
+	tool_call_logged.emit(call_data)
+
+
+func _update_tool_call_result(request_id: String, success: bool, result, error: String) -> void:
+	for call in _tool_call_history:
+		if call.id == request_id:
+			call.status = "success" if success else "error"
+			call.result = result
+			call.error = error
+			call.completed_at = Time.get_datetime_string_from_system()
+			tool_call_logged.emit(call)
+			break
+
+
+func get_tool_call_history() -> Array:
+	return _tool_call_history.duplicate(true)
 
 
 func _send_message(message: Dictionary) -> void:

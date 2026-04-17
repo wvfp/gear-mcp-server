@@ -13,7 +13,9 @@ import {
   actionLog,
   gitChangeSummary,
   nodes,
-  PROJECT_DATA
+  PROJECT_DATA,
+  toolCallHistory,
+  esc
 } from './state.js';
 import { connectWebSocket, onActionEvent, sendCommand } from './websocket.js';
 
@@ -100,6 +102,12 @@ function initTimeline() {
     addActionEntry(normalizeEntry(raw));
     renderTimeline();
   });
+
+  onActionEvent((msg) => {
+    if (msg.type === 'tool_call') {
+      renderToolCallHistory();
+    }
+  });
 }
 
 function renderTimeline() {
@@ -153,6 +161,50 @@ function renderTimeline() {
   }
 
   list.innerHTML = html;
+}
+
+function renderToolCallHistory() {
+  const panel = document.getElementById('tool-call-panel');
+  const list = document.getElementById('tool-call-list');
+  const count = document.getElementById('tool-call-count');
+  if (!panel || !list || !count) return;
+
+  count.textContent = toolCallHistory.length;
+
+  if (toolCallHistory.length === 0) {
+    list.innerHTML = '<div class="tool-call-empty">No tool calls yet</div>';
+    return;
+  }
+
+  let html = '';
+  for (const call of toolCallHistory) {
+    const statusClass = call.status === 'success' ? 'success' : call.status === 'error' ? 'error' : 'pending';
+    const icon = statusClass === 'success' ? '✓' : statusClass === 'error' ? '✗' : '⋯';
+    const duration = call.duration ? `${call.duration}ms` : '';
+    const time = call.timestamp ? formatTime(call.timestamp) : '';
+
+    html += `<div class="tool-call-item ${statusClass}">`;
+    html += `<span class="tool-call-icon">${icon}</span>`;
+    html += `<div class="tool-call-content">`;
+    html += `<span class="tool-call-name">${esc(call.tool || call.id)}</span>`;
+    if (call.args && Object.keys(call.args).length > 0) {
+      html += `<span class="tool-call-args">${formatArgs(call.args)}</span>`;
+    }
+    html += `</div>`;
+    html += `<div class="tool-call-meta">`;
+    if (time) html += `<span class="tool-call-time">${time}</span>`;
+    if (duration) html += `<span class="tool-call-duration">${duration}</span>`;
+    html += `</div>`;
+    html += '</div>';
+  }
+
+  list.innerHTML = html;
+}
+
+function formatArgs(args) {
+  const entries = Object.entries(args).slice(0, 3);
+  const str = entries.map(([k, v]) => `${k}=${typeof v === 'string' ? shortPath(v) : JSON.stringify(v)}`).join(', ');
+  return str;
 }
 
 // Initialize everything when DOM is ready
@@ -233,6 +285,13 @@ window.timelineCardClick = function timelineCardClick(filePath) {
 
 window.toggleTimelinePanel = function toggleTimelinePanel() {
   const panel = document.getElementById('timeline-panel');
+  if (panel) {
+    panel.classList.toggle('collapsed');
+  }
+};
+
+window.toggleToolCallPanel = function toggleToolCallPanel() {
+  const panel = document.getElementById('tool-call-panel');
   if (panel) {
     panel.classList.toggle('collapsed');
   }

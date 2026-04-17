@@ -232,6 +232,30 @@ export function setScenePosition(scenePath, x, y) {
   scenePositions[scenePath] = { x, y };
 }
 
+// ── Tool Call History state ──
+export const toolCallHistory = [];
+const MAX_TOOL_CALLS = 50;
+
+export function addToolCall(call) {
+  toolCallHistory.unshift(call);
+  if (toolCallHistory.length > MAX_TOOL_CALLS) {
+    toolCallHistory.pop();
+  }
+}
+
+export function updateToolCall(id, updates) {
+  for (const call of toolCallHistory) {
+    if (call.id === id) {
+      Object.assign(call, updates);
+      break;
+    }
+  }
+}
+
+export function clearToolCallHistory() {
+  toolCallHistory.length = 0;
+}
+
 // Delete operation state
 export let pendingDelete = null;
 export let currentUsages = [];

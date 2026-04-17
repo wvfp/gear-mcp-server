@@ -321,6 +321,20 @@
   </div>
 </div>
 
+<!-- Tool Call Panel -->
+<div id="tool-call-panel">
+  <div class="tl-header" onclick="toggleToolCallPanel()">
+    <span class="tl-title">MCP Tool Calls</span>
+    <span class="tl-count" id="tool-call-count">0</span>
+    <svg class="tl-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <polyline points="6 9 12 15 18 9"/>
+    </svg>
+  </div>
+  <div class="tl-body" id="tool-call-body">
+    <div class="tool-call-list" id="tool-call-list"></div>
+  </div>
+</div>
+
 <!-- Bookmarks Panel -->
 <div id="bookmarks-panel" style="display:none">
   <div class="bp-header">

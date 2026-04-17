@@ -493,6 +493,15 @@ export class GodotBridge extends EventEmitter {
           duration,
         });
 
+        this.broadcastToVisualizer({
+          type: 'tool_call',
+          data: {
+            id: pending.toolName,
+            status: message.success ? 'success' : 'error',
+            duration,
+          },
+        });
+
         if (message.success) {
           pending.resolve(message.result);
         } else {
@@ -553,6 +562,17 @@ export class GodotBridge extends EventEmitter {
         tool: toolName,
         id: requestId,
         args,
+      });
+
+      this.broadcastToVisualizer({
+        type: 'tool_call',
+        data: {
+          id: requestId,
+          tool: toolName,
+          args,
+          status: 'pending',
+          timestamp: new Date().toISOString(),
+        },
       });
 
       try {
