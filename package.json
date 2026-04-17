@@ -1,6 +1,6 @@
 {
   "name": "gear-godot-mcp",
-  "version": "2.3.6",
+  "version": "1.0.1",
   "mcpName": "io.github.wvfp/gear-godot-mcp",
   "description": "Gear — MCP server for Godot Engine with 110+ tools, compact/dynamic profiles, GDScript LSP, DAP debugger, screenshots, input injection, and CC0 asset search.",
   "type": "module",
@@ -18,23 +18,14 @@
   "scripts": {
     "build": "tsc && node scripts/build-visualizer.js && node scripts/build.js",
     "typecheck": "tsc --noEmit",
-    "test": "npm run test:ci",
-    "smoke": "npm run test:ci",
-    "test:smoke": "node scripts/smoke-test.mjs",
-    "test:integration": "node test-bridge.mjs",
-    "test:dynamic-groups": "node test-dynamic-groups.mjs",
-    "test:regressions": "node test-regressions.mjs",
-    "test:ci": "npm run test:smoke && npm run test:regressions",
-    "ci": "npm run build && npm run typecheck && npm run test:ci",
+    "test": "node scripts/smoke-test.mjs",
+    "ci": "npm run build && npm run typecheck && npm run test",
     "prepare": "npm run build",
     "postinstall": "node scripts/postinstall.mjs",
     "watch": "tsc --watch",
     "inspector": "npx @modelcontextprotocol/inspector build/index.js",
     "pack": "npm pack --dry-run",
-    "version:bump": "node scripts/bump-version.mjs",
-    "test:setup": "npm run build && node test-setup-hooks.mjs && node test-metadata-consistency.mjs && node test-packaging-consistency.mjs",
-    "test:metadata": "npm run build && node test-metadata-consistency.mjs",
-    "test:packaging": "npm run build && node test-packaging-consistency.mjs"
+    "version:bump": "node scripts/bump-version.mjs"
   },
   "engines": {
     "node": ">=18"

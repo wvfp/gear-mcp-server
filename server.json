@@ -6,12 +6,12 @@
     "url": "https://github.com/wvfp/Gear-godot-mcp",
     "source": "github"
   },
-  "version": "2.3.6",
+  "version": "1.0.1",
   "packages": [
     {
       "registryType": "npm",
       "identifier": "Gear",
-      "version": "2.3.6",
+      "version": "1.0.1",
       "transport": {
         "type": "stdio"
       },
