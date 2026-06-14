@@ -1,0 +1,11 @@
+{
+  "name": "gear-mcp-proxy",
+  "version": "1.0.0",
+  "description": "stdio-to-TCP proxy for Gear MCP Server (Godot GDExtension)",
+  "main": "index.js",
+  "bin": {
+    "gear-mcp-proxy": "./index.js"
+  },
+  "keywords": ["godot", "mcp", "proxy", "gdextension"],
+  "license": "MIT"
+}

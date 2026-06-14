@@ -1,0 +1,22 @@
+[configuration]
+
+entry_symbol = "gear_mcp_server_init"
+compatibility_minimum = "4.4"
+
+[libraries]
+
+; Windows
+windows.debug.x86_64 = "res://addons/gear_mcp/bin/libgear_mcp_server.windows.template_debug.x86_64.dll"
+windows.release.x86_64 = "res://addons/gear_mcp/bin/libgear_mcp_server.windows.template_release.x86_64.dll"
+windows.debug.arm64 = "res://addons/gear_mcp/bin/libgear_mcp_server.windows.template_debug.arm64.dll"
+windows.release.arm64 = "res://addons/gear_mcp/bin/libgear_mcp_server.windows.template_release.arm64.dll"
+
+; Linux
+linux.debug.x86_64 = "res://addons/gear_mcp/bin/libgear_mcp_server.linux.template_debug.x86_64.so"
+linux.release.x86_64 = "res://addons/gear_mcp/bin/libgear_mcp_server.linux.template_release.x86_64.so"
+linux.debug.arm64 = "res://addons/gear_mcp/bin/libgear_mcp_server.linux.template_debug.arm64.so"
+linux.release.arm64 = "res://addons/gear_mcp/bin/libgear_mcp_server.linux.template_release.arm64.so"
+
+; macOS
+macos.debug = "res://addons/gear_mcp/bin/libgear_mcp_server.macos.template_debug.framework"
+macos.release = "res://addons/gear_mcp/bin/libgear_mcp_server.macos.template_release.framework"

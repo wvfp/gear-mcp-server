@@ -1,0 +1,36 @@
+# Build directory
+build/
+
+# Generated binaries in addon (rebuild from source)
+project/addons/gear_mcp/bin/
+
+# IDE
+.vs/
+.vscode/
+*.user
+*.suo
+CMakeSettings.json
+
+# Editor caches
+.codegraph/
+.godot/
+*.uid.import
+
+# OS
+.DS_Store
+Thumbs.db
+
+# MCP test/log artifacts
+godot_e2e*.log
+__e2e_*.png
+__e2e_*.json
+__e2e_*.tscn
+__e2e_*.gd
+__e2e_*.uid
+
+# Node / proxy runtime
+proxy/node_modules/
+proxy/package-lock.json
+
+# Intent state (per-machine recording data)
+project/.gear_mcp/
