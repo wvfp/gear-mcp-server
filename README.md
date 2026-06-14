@@ -1,7 +1,7 @@
 <p align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="docs/assets/logo-dark.svg">
-    <img alt="Gear MCP Server" src="docs/assets/logo-light.svg" width="520">
+    <source media="(prefers-color-scheme: dark)" srcset="assets/logo-dark.svg">
+    <img alt="Gear MCP Server" src="assets/logo-light.svg" width="520">
   </picture>
 </p>
 
@@ -33,7 +33,7 @@ The repo ships two artifacts:
 ## Architecture
 
 <p align="center">
-  <img alt="Architecture" src="docs/assets/architecture.svg" width="760">
+  <img alt="Architecture" src="assets/architecture.svg" width="760">
 </p>
 
 - The GDExtension opens a `TCPServer` on `127.0.0.1:8510` (overridable via `GEAR_PORT`).
