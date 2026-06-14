@@ -118,17 +118,18 @@ func _build_ui() -> void:
 	tools_title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	tools_header.add_child(tools_title)
 
-	var enable_all := Button.new()
-	enable_all.text = "☑ All"
-	enable_all.tooltip_text = "Enable every tool"
-	enable_all.pressed.connect(_on_enable_all)
-	tools_header.add_child(enable_all)
-
-	var disable_all := Button.new()
-	disable_all.text = "☐ None"
-	disable_all.tooltip_text = "Disable every tool"
-	disable_all.pressed.connect(_on_disable_all)
-	tools_header.add_child(disable_all)
+	# Single button with a popup menu (Enable all / Disable all / Invert)
+	# instead of two side-by-side buttons — keeps the header compact.
+	var bulk_menu := MenuButton.new()
+	bulk_menu.text = "▾ Bulk"
+	bulk_menu.tooltip_text = "Enable all / Disable all / Invert selection"
+	var popup := bulk_menu.get_popup()
+	popup.add_item("☑ Enable all", 1)
+	popup.add_item("☐ Disable all", 2)
+	popup.add_separator()
+	popup.add_item("⇄ Invert selection", 3)
+	popup.id_pressed.connect(_on_bulk_menu_pressed)
+	tools_header.add_child(bulk_menu)
 
 	var filter_edit := LineEdit.new()
 	filter_edit.placeholder_text = "Filter (e.g. scene, file/read)"
@@ -146,7 +147,10 @@ func _build_ui() -> void:
 	_tools_tree.set_column_custom_minimum_width(1, 50)
 	_tools_tree.set_column_expand(1, false)
 	_tools_tree.set_column_titles_visible(false)
-	_tools_tree.item_activated.connect(_on_tool_activated)
+	# Intercept mouse clicks via _gui_input — the item_activated signal
+	# is unreliable for CELL_MODE_CHECK (Tree's auto-toggle + my manual
+	# toggle were double-flipping in the previous version).
+	_tools_tree.gui_input.connect(_on_tree_gui_input)
 	tools_panel.add_child(_tools_tree)
 
 	# Log panel
@@ -283,35 +287,78 @@ func _rebuild_tools_tree() -> void:
 			leaf.set_metadata(1, {"name": tool_name})
 
 
-func _on_tool_activated() -> void:
-	# Double-click — expand/collapse or check/uncheck
-	var item := _tools_tree.get_selected()
-	if item == null:
-		return
-	# Single click also triggers check toggle for leaves; we just toggle
-	# the checkbox here.
-	if item.is_checkable(0):
-		item.set_checked(0, not item.is_checked(0))
-		_apply_toggle(item)
-
-
 func _on_filter_changed(new_text: String) -> void:
 	_filter = new_text.strip_edges()
 	_rebuild_tools_tree()
 
 
-func _on_enable_all() -> void:
+func _on_bulk_menu_pressed(id: int) -> void:
 	if _api == null:
 		return
-	_api.enable_all_tools()
-	_rebuild_tools_tree()
+	match id:
+		1: # Enable all
+			_api.enable_all_tools()
+			_rebuild_tools_tree()
+		2: # Disable all
+			_api.disable_all_tools()
+			_rebuild_tools_tree()
+		3: # Invert
+			_invert_selection()
 
 
-func _on_disable_all() -> void:
+func _invert_selection() -> void:
+	# Walk the tree and flip every checked leaf, propagating each change
+	# to C++. This is O(n) in the number of tools; fine for 109.
 	if _api == null:
 		return
-	_api.disable_all_tools()
-	_rebuild_tools_tree()
+	var root := _tools_tree.get_root()
+	if root == null:
+		return
+	for d in range(root.get_child_count()):
+		var domain := root.get_child(d)
+		for c in range(domain.get_child_count()):
+			var leaf := domain.get_child(c)
+			var new_state := not leaf.is_checked(0)
+			leaf.set_checked(0, new_state)
+			var m = leaf.get_metadata(0)
+			if m != null:
+				m["enabled"] = new_state
+				leaf.set_metadata(0, m)
+			var name: String = m.get("name", "") if m != null else ""
+			if name != "":
+				_api.set_tool_enabled(name, new_state)
+		_update_domain_label(domain)
+
+
+# ---------------------------------------------------------------------------
+# Mouse handling — intercept clicks on the checkbox column so toggling is
+# reliable. Tree's internal CELL_MODE_CHECK auto-toggle would otherwise
+# fight with our manual toggle and the row would never change.
+# ---------------------------------------------------------------------------
+
+func _on_tree_gui_input(event: InputEvent) -> void:
+	if not (event is InputEventMouseButton):
+		return
+	var mb := event as InputEventMouseButton
+	if not mb.pressed or mb.button_index != MOUSE_BUTTON_LEFT:
+		return
+	var item := _tools_tree.get_item_at_position(mb.position)
+	if item == null:
+		return
+	# Only react when the click lands on the checkbox column of a leaf.
+	# We don't strictly know the column here, but column 0 is the only
+	# one with a checkbox, so is_checkable(0) is the correct test.
+	if not item.is_checkable(0):
+		return
+	var meta = item.get_metadata(0)
+	if meta == null or meta.get("is_domain", false):
+		return
+	# Toggle manually (Tree's auto-toggle was the source of the previous
+	# double-flip bug — by calling accept_event() we let the visual state
+	# come from our own set_checked below, no race).
+	item.set_checked(0, not item.is_checked(0))
+	_apply_toggle(item)
+	get_viewport().set_input_as_handled()
 
 
 func _apply_toggle(item: TreeItem) -> void:
