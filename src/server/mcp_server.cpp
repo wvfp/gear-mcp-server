@@ -40,7 +40,15 @@ bool MCPServer::start() {
 void MCPServer::stop() {
     if (!m_running) return;
     m_running = false;
-    m_tcp_server->stop();
+    if (m_tcp_server) m_tcp_server->stop();
+}
+
+int MCPServer::get_port() const {
+    return m_tcp_server ? m_tcp_server->get_port() : 0;
+}
+
+int MCPServer::get_connected_clients() const {
+    return m_tcp_server ? m_tcp_server->connected_clients() : 0;
 }
 
 std::string MCPServer::_handle_message(const std::string &p_request) {

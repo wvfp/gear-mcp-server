@@ -35,6 +35,12 @@ public:
     /// Returns true if the server is currently running.
     bool is_running() const { return m_running; }
 
+    /// Port the server is bound to (0 if not started).
+    uint16_t get_port() const { return m_port; }
+
+    /// Number of currently connected clients (sum across all worker threads).
+    int connected_clients() const { return m_connected_clients.load(); }
+
 private:
 #ifdef _WIN32
     using socket_t = size_t;
@@ -55,6 +61,7 @@ private:
     void _accept_thread();
 
     std::atomic<bool> m_running{false};
+    std::atomic<int> m_connected_clients{0};
     uint16_t m_port = 8510;
     socket_t m_listen_fd = INVALID_SOCK;
     MessageHandler m_handler;

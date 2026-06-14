@@ -3,7 +3,9 @@
 #include "tool_registry.h"
 
 #include <nlohmann/json.hpp>
+#include <chrono>
 #include <cstdio>
+#include <sstream>
 
 namespace gear_mcp {
 
@@ -19,31 +21,98 @@ MCPMethods::MCPMethods(ToolRegistry *p_registry)
 }
 
 // ===========================================================================
+// Time helper
+// ===========================================================================
+
+int64_t MCPMethods::_now_ms() {
+    using namespace std::chrono;
+    return duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+}
+
+// ===========================================================================
+// Log buffer
+// ===========================================================================
+
+void MCPMethods::_log(const std::string &p_level, const std::string &p_method,
+                      const std::string &p_tool, const std::string &p_status,
+                      int p_duration_ms, const std::string &p_message) const {
+    LogEntry e;
+    e.timestamp_ms = _now_ms();
+    e.level = p_level;
+    e.method = p_method;
+    e.tool = p_tool;
+    e.status = p_status;
+    e.duration_ms = p_duration_ms;
+    e.message = p_message;
+
+    std::lock_guard<std::mutex> lock(m_logs_mutex);
+    if (m_logs.size() >= MAX_LOG_ENTRIES) {
+        m_logs.pop_front();
+    }
+    m_logs.push_back(std::move(e));
+}
+
+void MCPMethods::get_recent_logs(std::vector<LogEntry> &r_out, size_t p_max_count) const {
+    r_out.clear();
+    std::lock_guard<std::mutex> lock(m_logs_mutex);
+    if (p_max_count == 0 || m_logs.empty()) return;
+    size_t start = (m_logs.size() > p_max_count) ? (m_logs.size() - p_max_count) : 0;
+    r_out.reserve(m_logs.size() - start);
+    for (size_t i = start; i < m_logs.size(); ++i) {
+        r_out.push_back(m_logs[i]);
+    }
+}
+
+size_t MCPMethods::log_count() const {
+    std::lock_guard<std::mutex> lock(m_logs_mutex);
+    return m_logs.size();
+}
+
+void MCPMethods::clear_logs() {
+    std::lock_guard<std::mutex> lock(m_logs_mutex);
+    m_logs.clear();
+}
+
+// ===========================================================================
 // Public dispatch
 // ===========================================================================
 
 std::string MCPMethods::handle(const json &p_req) const {
     std::string method = p_req.value("method", "");
+    int64_t t0 = _now_ms();
+    std::string response;
 
     if (method == "ping") {
-        return _handle_ping(p_req);
+        response = _handle_ping(p_req);
     } else if (method == "initialize") {
-        return _handle_initialize(p_req);
+        response = _handle_initialize(p_req);
     } else if (method == "tools/list") {
-        return _handle_tools_list(p_req);
+        response = _handle_tools_list(p_req);
     } else if (method == "tools/call") {
-        return _handle_tools_call(p_req);
+        response = _handle_tools_call(p_req);
     } else if (method == "resources/list") {
-        return _handle_resources_list(p_req);
+        response = _handle_resources_list(p_req);
     } else if (method == "resources/read") {
-        return _handle_resources_read(p_req);
+        response = _handle_resources_read(p_req);
     } else if (method == "prompts/list") {
-        return _handle_prompts_list(p_req);
+        response = _handle_prompts_list(p_req);
     } else if (method == "prompts/get") {
-        return _handle_prompts_get(p_req);
+        response = _handle_prompts_get(p_req);
     }
     // Not recognized
-    return {};
+
+    if (!response.empty()) {
+        int dur = (int)(_now_ms() - t0);
+        // Cheap heuristic: cheap ops log at info; tools/call is the only
+        // method that goes through this generic path and is logged inside
+        // _handle_tools_call with its own duration measurement. So we only
+        // reach here for the lightweight methods.
+        if (method != "tools/call") {
+            _log("info", method, "", "ok", dur, "");
+        }
+    }
+
+    return response;
 }
 
 void MCPMethods::register_resource(const ResourceInfo &p_resource) {
@@ -198,6 +267,7 @@ std::string MCPMethods::_handle_tools_call(const json &p_req) const {
     std::string tool_name = params.value("name", "");
 
     if (tool_name.empty()) {
+        _log("error", "tools/call", "", "error", 0, "missing 'name'");
         return make_error(id, -32602, "Invalid params: missing 'name'").dump() + "\n";
     }
 
@@ -205,7 +275,16 @@ std::string MCPMethods::_handle_tools_call(const json &p_req) const {
     ToolInfo tool_info;
     ToolHandler handler = nullptr;
     if (!m_tool_registry || !m_tool_registry->get_tool(tool_name.c_str(), tool_info, handler)) {
+        _log("warn", "tools/call", tool_name, "error", 0, "tool not registered");
         return make_error(id, -32602, "Tool not found: " + tool_name).dump() + "\n";
+    }
+
+    // Check whether the panel has disabled this tool. Report the same error
+    // shape a client would get for a truly missing method, so the AI
+    // gracefully falls back instead of crashing.
+    if (!m_tool_registry->is_tool_enabled(tool_name)) {
+        _log("warn", "tools/call", tool_name, "skipped", 0, "tool disabled in panel");
+        return make_error(id, -32601, "Method not found: " + tool_name).dump() + "\n";
     }
 
     // Get arguments as raw JSON string for the handler
@@ -216,7 +295,15 @@ std::string MCPMethods::_handle_tools_call(const json &p_req) const {
         args_json = "{}";
     }
 
+    // Truncate args preview for the log (avoid huge entries).
+    std::string args_preview = args_json;
+    if (args_preview.size() > 200) {
+        args_preview.resize(200);
+        args_preview += "...";
+    }
+
     // Execute the handler
+    int64_t t0 = _now_ms();
     std::string result_out;
     std::string error_out;
 
@@ -241,7 +328,17 @@ std::string MCPMethods::_handle_tools_call(const json &p_req) const {
         }
     }
 
+    int dur = (int)(_now_ms() - t0);
+    m_tool_registry->increment_call_count(tool_name);
+
     if (!error_out.empty()) {
+        // Truncate long error messages in the log preview.
+        std::string err_preview = error_out;
+        if (err_preview.size() > 200) {
+            err_preview.resize(200);
+            err_preview += "...";
+        }
+        _log("error", "tools/call", tool_name, "error", dur, err_preview);
         // MCP error format: return isError in content
         json result = {
             {"content", {{{"type", "text"}, {"text", error_out}}}},
@@ -249,6 +346,8 @@ std::string MCPMethods::_handle_tools_call(const json &p_req) const {
         };
         return make_response(id, result).dump() + "\n";
     }
+
+    _log("info", "tools/call", tool_name, "ok", dur, args_preview);
 
     // Build MCP result
     json result = {

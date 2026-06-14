@@ -86,6 +86,8 @@ target_sources(${TARGET_NAME} PRIVATE
     # Server infrastructure
     src/server/tcp_server.h
     src/server/tcp_server.cpp
+    src/server/gear_mcp_api.h
+    src/server/gear_mcp_api.cpp
     src/server/tool_registry.h
     src/server/tool_registry.cpp
     src/server/main_thread_queue.h

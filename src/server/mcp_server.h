@@ -29,6 +29,12 @@ public:
     ToolRegistry *get_tool_registry() { return m_tool_registry; }
     MCPMethods *get_methods() { return m_methods; }
 
+    /// Port the TCP server is bound to (0 if not started).
+    int get_port() const;
+
+    /// Number of currently connected MCP clients.
+    int get_connected_clients() const;
+
 private:
     std::string _handle_message(const std::string &p_request);
 

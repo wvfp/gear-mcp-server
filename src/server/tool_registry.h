@@ -1,7 +1,9 @@
 #pragma once
 
+#include <cstdint>
 #include <map>
 #include <mutex>
+#include <set>
 #include <string>
 #include <vector>
 
@@ -40,6 +42,33 @@ public:
     /// Number of registered tools.
     size_t tool_count() const;
 
+    /// Number of tools currently enabled (i.e. not in the disabled set).
+    size_t enabled_count() const;
+
+    /// Set the enabled state of a single tool. Returns false if the tool
+    /// does not exist. Disabling a tool causes its tools/call to return
+    /// a "Method not found" error.
+    bool set_tool_enabled(const std::string &p_name, bool p_enabled);
+
+    /// Returns the enabled state of a tool (defaults to true for unknown).
+    bool is_tool_enabled(const std::string &p_name) const;
+
+    /// Mark every registered tool as enabled. Returns the number flipped.
+    size_t enable_all_tools();
+
+    /// Mark every registered tool as disabled. Returns the number flipped.
+    size_t disable_all_tools();
+
+    /// Increment the per-tool call counter. Called by MCPMethods after each
+    /// successful or failed tools/call dispatch.
+    void increment_call_count(const std::string &p_name);
+
+    /// Total number of tools/call invocations across all tools.
+    int64_t total_call_count() const;
+
+    /// Returns the call count for a single tool (0 if never called).
+    int64_t get_call_count(const std::string &p_name) const;
+
 private:
     struct Entry {
         ToolInfo info;
@@ -47,6 +76,8 @@ private:
     };
 
     std::map<std::string, Entry> m_tools;
+    std::set<std::string> m_disabled;
+    std::map<std::string, int64_t> m_call_counts;
     mutable std::mutex m_mutex;
 };
 

@@ -3,6 +3,7 @@
 #include "godot_api/godot_api.h"
 #include "godot_api/editor_context.h"
 #include "gear_main_thread_node.h"
+#include "server/gear_mcp_api.h"
 #include "server/main_thread_queue.h"
 #include "server/mcp_methods.h"
 #include "server/mcp_server.h"
@@ -73,6 +74,14 @@ void initialize_gear_mcp_module(ModuleInitializationLevel p_level) {
     // (those C API versions are deprecated/removed in 4.7-dev3).
     if (p_level == MODULE_INITIALIZATION_LEVEL_SCENE) {
         GDREGISTER_CLASS(gear_mcp::GearMainThreadNode);
+        // GearMCPAPI extends Object and only needs registration so that
+        // _bind_methods is invoked. The singleton instance is created at
+        // SCENE level (per Godot 4.4+ requirement that engine singletons
+        // be registered at SCENE init, not EDITOR) with a null server
+        // pointer; the live server is wired in at EDITOR level via
+        // set_server() below.
+        GDREGISTER_CLASS(gear_mcp::GearMCPAPI);
+        gear_mcp::GearMCPAPI::create_and_register(nullptr);
         return;
     }
 
@@ -114,6 +123,10 @@ void uninitialize_gear_mcp_module(ModuleInitializationLevel p_level) {
         return;
     }
     gear_mcp::MainThreadQueue::set_dispatch_available(false);
+
+    // Tear down the API singleton before MCPServer so the engine lookup
+    // table doesn't dangle.
+    gear_mcp::GearMCPAPI::unregister_and_destroy();
 
     if (g_mcp_server) {
         delete g_mcp_server;

@@ -45,4 +45,59 @@ size_t ToolRegistry::tool_count() const {
     return m_tools.size();
 }
 
+size_t ToolRegistry::enabled_count() const {
+    std::lock_guard<std::mutex> lock(m_mutex);
+    return m_tools.size() - m_disabled.size();
+}
+
+bool ToolRegistry::set_tool_enabled(const std::string &p_name, bool p_enabled) {
+    std::lock_guard<std::mutex> lock(m_mutex);
+    if (m_tools.find(p_name) == m_tools.end()) return false;
+    if (p_enabled) {
+        m_disabled.erase(p_name);
+    } else {
+        m_disabled.insert(p_name);
+    }
+    return true;
+}
+
+bool ToolRegistry::is_tool_enabled(const std::string &p_name) const {
+    std::lock_guard<std::mutex> lock(m_mutex);
+    return m_disabled.find(p_name) == m_disabled.end();
+}
+
+size_t ToolRegistry::enable_all_tools() {
+    std::lock_guard<std::mutex> lock(m_mutex);
+    size_t n = m_disabled.size();
+    m_disabled.clear();
+    return n;
+}
+
+size_t ToolRegistry::disable_all_tools() {
+    std::lock_guard<std::mutex> lock(m_mutex);
+    size_t n = 0;
+    for (const auto &pair : m_tools) {
+        if (m_disabled.insert(pair.first).second) ++n;
+    }
+    return n;
+}
+
+void ToolRegistry::increment_call_count(const std::string &p_name) {
+    std::lock_guard<std::mutex> lock(m_mutex);
+    ++m_call_counts[p_name]; // operator[] inserts 0 if missing
+}
+
+int64_t ToolRegistry::total_call_count() const {
+    std::lock_guard<std::mutex> lock(m_mutex);
+    int64_t sum = 0;
+    for (const auto &pair : m_call_counts) sum += pair.second;
+    return sum;
+}
+
+int64_t ToolRegistry::get_call_count(const std::string &p_name) const {
+    std::lock_guard<std::mutex> lock(m_mutex);
+    auto it = m_call_counts.find(p_name);
+    return it == m_call_counts.end() ? 0 : it->second;
+}
+
 } // namespace gear_mcp

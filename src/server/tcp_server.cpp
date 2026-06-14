@@ -5,6 +5,12 @@
 #include <string>
 #include <vector>
 
+// Self-pointer: the per-instance counter the client worker threads decrement on exit.
+// This is a process-wide static, but it works because there's only one TCPServer
+// in the editor. If the design ever needs multiple servers, refactor to a per-
+// instance refcounted handle.
+namespace { gear_mcp::TCPServer *g_tcp_server_for_counter = nullptr; }
+
 #ifdef _WIN32
 #ifndef _WIN32_WINNT
 #define _WIN32_WINNT 0x0601
@@ -157,6 +163,8 @@ void TCPServer::stop() {
 #ifdef _WIN32
     WSACleanup();
 #endif
+
+    g_tcp_server_for_counter = nullptr;
 }
 
 // ===========================================================================
@@ -274,6 +282,7 @@ void TCPServer::_accept_thread() {
 #endif
 
         ClientContext *ctx = new ClientContext(client_fd, m_handler);
+        m_connected_clients.fetch_add(1);
 
 #ifdef _WIN32
         HANDLE hThread = CreateThread(NULL, 0, [](void *p) -> DWORD {
@@ -314,6 +323,7 @@ void TCPServer::_accept_thread() {
             std::fprintf(stderr, "[Gear MCP] Failed to create client thread\n");
             closesocket(client_fd);
             delete ctx;
+            m_connected_clients.fetch_sub(1);
         }
 #else
         pthread_t thread;
@@ -357,6 +367,7 @@ void TCPServer::_accept_thread() {
             std::fprintf(stderr, "[Gear MCP] Failed to create client thread\n");
             ::close(client_fd);
             delete ctx;
+            m_connected_clients.fetch_sub(1);
         }
         pthread_attr_destroy(&attr);
 #endif
