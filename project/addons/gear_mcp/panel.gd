@@ -239,12 +239,21 @@ func _rebuild_tools_tree() -> void:
 			by_domain[d] = []
 		by_domain[d].append(t)
 
+	# Tree.create_item() with no parent can only be called ONCE per tree
+	# (it creates the hidden root). Every other item must be parented
+	# explicitly. Get-or-create the root here, then add all domain groups
+	# and leaves under it.
+	var root := _tools_tree.get_root()
+	if root == null:
+		root = _tools_tree.create_item()
+	_tools_tree.hide_root = true
+
 	# Sort domains alphabetically for stable display
 	var domains: Array = by_domain.keys()
 	domains.sort()
 	for domain in domains:
 		var items: Array = by_domain[domain]
-		var domain_node := _tools_tree.create_item()
+		var domain_node := _tools_tree.create_item(root)
 		var total_d := items.size()
 		var enabled_d := 0
 		for it in items:
@@ -253,15 +262,17 @@ func _rebuild_tools_tree() -> void:
 		domain_node.set_text(0, "%s  (%d/%d)" % [domain, enabled_d, total_d])
 		domain_node.set_metadata(0, {"is_domain": true, "domain": domain})
 		domain_node.set_selectable(0, false)
+		domain_node.set_custom_color(0, Color(0.55, 0.58, 0.62))
 		_domain_nodes[domain] = domain_node
 
-		for t in tools:
+		for t in items:
 			var tool_name: String = t.get("name", "")
 			if _filter != "" and not tool_name.contains(_filter):
 				continue
 			var leaf := _tools_tree.create_item(domain_node)
+			# cell_mode must be set BEFORE set_checked or set_text
 			leaf.set_cell_mode(0, 1) # Tree.CELL_MODE_CHECK
-			leaf.set_checked(0, t.get("enabled", true))
+			leaf.set_checked(0, bool(t.get("enabled", true)))
 			leaf.set_text(0, tool_name)
 			leaf.set_text(1, str(t.get("call_count", 0)))
 			leaf.set_metadata(0, {
