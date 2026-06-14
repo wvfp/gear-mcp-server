@@ -346,9 +346,9 @@ func _on_tree_gui_input(event: InputEvent) -> void:
 	if item == null:
 		return
 	# Only react when the click lands on the checkbox column of a leaf.
-	# We don't strictly know the column here, but column 0 is the only
-	# one with a checkbox, so is_checkable(0) is the correct test.
-	if not item.is_checkable(0):
+	# Godot 4.6 removed TreeItem.is_checkable(); the canonical test is
+	# the cell mode. Column 0 is the only one with a checkbox.
+	if item.get_cell_mode(0) != 1: # Tree.CELL_MODE_CHECK
 		return
 	var meta = item.get_metadata(0)
 	if meta == null or meta.get("is_domain", false):
