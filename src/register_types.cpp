@@ -112,6 +112,11 @@ void initialize_gear_mcp_module(ModuleInitializationLevel p_level) {
         std::fprintf(stderr, "[Gear MCP] Failed to start server\n");
     }
 
+    // Wire the live server into the singleton that was created at SCENE
+    // level (which had a null server pointer at that point). Without this
+    // every getter in the editor panel returns zero / null.
+    gear_mcp::GearMCPAPI::set_server(g_mcp_server);
+
     // The C++ Node subclass is registered at SCENE level above; here we
     // just wait for the SceneTree to be ready and add it. This is the
     // only piece of "magic" needed to bridge worker threads -> main thread.

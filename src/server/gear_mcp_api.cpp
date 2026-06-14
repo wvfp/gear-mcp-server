@@ -159,7 +159,9 @@ godot::Array GearMCPAPI::get_tools() const {
     if (!m_server) return out;
     std::vector<ToolInfo> tools;
     m_server->get_tool_registry()->list_tools(tools);
-    out.resize((int)tools.size());
+    // Don't use Array.resize() — it fills with nulls which then get pushed-back
+    // after, leaving a [null...null, dict...dict] array that crashes GDScript
+    // iteration. Just push_back into an empty Array.
     for (const auto &t : tools) {
         godot::Dictionary d;
         d["name"] = godot::String(t.name.c_str());
@@ -214,8 +216,6 @@ godot::Array GearMCPAPI::get_log_entries(int p_max_count) const {
     if (!m_server) return out;
     std::vector<LogEntry> entries;
     m_server->get_methods()->get_recent_logs(entries, (size_t)(p_max_count > 0 ? p_max_count : 200));
-    int n = (int)entries.size();
-    out.resize(n);
     for (const auto &e : entries) {
         godot::Dictionary d;
         d["timestamp_ms"] = (int64_t)e.timestamp_ms;
