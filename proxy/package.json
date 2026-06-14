@@ -1,11 +1,37 @@
 {
   "name": "gear-mcp-proxy",
-  "version": "1.0.0",
-  "description": "stdio-to-TCP proxy for Gear MCP Server (Godot GDExtension)",
+  "version": "1.0.1",
+  "description": "stdio-to-TCP proxy for Gear MCP Server (Godot GDExtension). Lets any MCP client talk to the in-editor server over a localhost TCP socket.",
   "main": "index.js",
-  "bin": {
-    "gear-mcp-proxy": "./index.js"
+  "bin": "./index.js",
+  "files": [
+    "index.js",
+    "README.md"
+  ],
+  "scripts": {
+    "start": "node index.js"
   },
-  "keywords": ["godot", "mcp", "proxy", "gdextension"],
+  "keywords": [
+    "godot",
+    "mcp",
+    "model-context-protocol",
+    "proxy",
+    "gdextension",
+    "ai",
+    "claude",
+    "cursor"
+  ],
+  "engines": {
+    "node": ">=14"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wvfp/gear-mcp-server.git",
+    "directory": "proxy"
+  },
+  "homepage": "https://github.com/wvfp/gear-mcp-server#readme",
+  "bugs": {
+    "url": "https://github.com/wvfp/gear-mcp-server/issues"
+  },
   "license": "MIT"
 }
