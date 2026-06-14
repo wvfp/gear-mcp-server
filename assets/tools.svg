@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 360" role="img" aria-label="Tool domains">
+  <defs>
+    <style>
+      .chip { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 12px; font-weight: 600; fill: #FFFFFF; }
+      .count { font-family: 'SF Mono', Menlo, Consolas, monospace; font-size: 11px; font-weight: 700; fill: #FFFFFF; opacity: 0.9; }
+      .title { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 13px; font-weight: 700; fill: #1F2D3D; letter-spacing: 0.4px; }
+      .total { font-family: 'SF Mono', Menlo, Consolas, monospace; font-size: 11px; font-weight: 700; fill: #FFFFFF; }
+    </style>
+  </defs>
+
+  <rect x="0" y="0" width="760" height="360" rx="12" fill="#F8FAFC"/>
+
+  <!-- Phase 1: Core editor (44) -->
+  <text x="20" y="26" class="title">PHASE 1 · CORE EDITOR</text>
+  <text x="740" y="26" class="title" text-anchor="end" fill="#2C5F8D">44 tools</text>
+
+  <g transform="translate(20 38)">
+    <!-- row 1 -->
+    <g><rect width="80" height="30" rx="6" fill="#2C5F8D"/><text x="40" y="20" class="chip" text-anchor="middle">file</text><text x="74" y="20" class="count" text-anchor="end">3</text></g>
+    <g transform="translate(88 0)"><rect width="80" height="30" rx="6" fill="#2C5F8D"/><text x="40" y="20" class="chip" text-anchor="middle">scene</text><text x="74" y="20" class="count" text-anchor="end">10</text></g>
+    <g transform="translate(176 0)"><rect width="80" height="30" rx="6" fill="#2C5F8D"/><text x="40" y="20" class="chip" text-anchor="middle">script</text><text x="74" y="20" class="count" text-anchor="end">3</text></g>
+    <g transform="translate(264 0)"><rect width="80" height="30" rx="6" fill="#2C5F8D"/><text x="40" y="20" class="chip" text-anchor="middle">classdb</text><text x="74" y="20" class="count" text-anchor="end">3</text></g>
+    <g transform="translate(352 0)"><rect width="80" height="30" rx="6" fill="#2C5F8D"/><text x="40" y="20" class="chip" text-anchor="middle">project</text><text x="74" y="20" class="count" text-anchor="end">5</text></g>
+    <g transform="translate(440 0)"><rect width="80" height="30" rx="6" fill="#2C5F8D"/><text x="40" y="20" class="chip" text-anchor="middle">editor</text><text x="74" y="20" class="count" text-anchor="end">6</text></g>
+    <g transform="translate(528 0)"><rect width="80" height="30" rx="6" fill="#2C5F8D"/><text x="40" y="20" class="chip" text-anchor="middle">resource</text><text x="74" y="20" class="count" text-anchor="end">5</text></g>
+    <g transform="translate(616 0)"><rect width="80" height="30" rx="6" fill="#2C5F8D"/><text x="40" y="20" class="chip" text-anchor="middle">export</text><text x="74" y="20" class="count" text-anchor="end">2</text></g>
+    <!-- row 2 -->
+    <g transform="translate(0 38)"><rect width="80" height="30" rx="6" fill="#2C5F8D"/><text x="40" y="20" class="chip" text-anchor="middle">signal</text><text x="74" y="20" class="count" text-anchor="end">3</text></g>
+    <g transform="translate(88 38)"><rect width="80" height="30" rx="6" fill="#2C5F8D"/><text x="40" y="20" class="chip" text-anchor="middle">autoload</text><text x="74" y="20" class="count" text-anchor="end">4</text></g>
+  </g>
+
+  <!-- Phase 3: Engine systems (31) -->
+  <text x="20" y="138" class="title">PHASE 3 · ENGINE SYSTEMS</text>
+  <text x="740" y="138" class="title" text-anchor="end" fill="#D97706">31 tools</text>
+
+  <g transform="translate(20 150)">
+    <g><rect width="90" height="30" rx="6" fill="#D97706"/><text x="45" y="20" class="chip" text-anchor="middle">animation</text><text x="84" y="20" class="count" text-anchor="end">5</text></g>
+    <g transform="translate(98 0)"><rect width="80" height="30" rx="6" fill="#D97706"/><text x="40" y="20" class="chip" text-anchor="middle">audio</text><text x="74" y="20" class="count" text-anchor="end">4</text></g>
+    <g transform="translate(186 0)"><rect width="80" height="30" rx="6" fill="#D97706"/><text x="40" y="20" class="chip" text-anchor="middle">tilemap</text><text x="74" y="20" class="count" text-anchor="end">2</text></g>
+    <g transform="translate(274 0)"><rect width="96" height="30" rx="6" fill="#D97706"/><text x="48" y="20" class="chip" text-anchor="middle">navigation</text><text x="90" y="20" class="count" text-anchor="end">2</text></g>
+    <g transform="translate(378 0)"><rect width="80" height="30" rx="6" fill="#D97706"/><text x="40" y="20" class="chip" text-anchor="middle">theme</text><text x="74" y="20" class="count" text-anchor="end">3</text></g>
+    <g transform="translate(466 0)"><rect width="80" height="30" rx="6" fill="#D97706"/><text x="40" y="20" class="chip" text-anchor="middle">plugin</text><text x="74" y="20" class="count" text-anchor="end">3</text></g>
+    <g transform="translate(554 0)"><rect width="80" height="30" rx="6" fill="#D97706"/><text x="40" y="20" class="chip" text-anchor="middle">input</text><text x="74" y="20" class="count" text-anchor="end">1</text></g>
+    <g transform="translate(642 0)"><rect width="74" height="30" rx="6" fill="#D97706"/><text x="37" y="20" class="chip" text-anchor="middle">uid</text><text x="68" y="20" class="count" text-anchor="end">2</text></g>
+
+    <g transform="translate(0 38)"><rect width="80" height="30" rx="6" fill="#D97706"/><text x="40" y="20" class="chip" text-anchor="middle">import</text><text x="74" y="20" class="count" text-anchor="end">5</text></g>
+    <g transform="translate(88 38)"><rect width="80" height="30" rx="6" fill="#D97706"/><text x="40" y="20" class="chip" text-anchor="middle">runtime</text><text x="74" y="20" class="count" text-anchor="end">4</text></g>
+  </g>
+
+  <!-- Phase 4: AI workflow (34) -->
+  <text x="20" y="250" class="title">PHASE 4 · AI WORKFLOW</text>
+  <text x="740" y="250" class="title" text-anchor="end" fill="#BE185D">34 tools</text>
+
+  <g transform="translate(20 262)">
+    <g><rect width="80" height="30" rx="6" fill="#BE185D"/><text x="40" y="20" class="chip" text-anchor="middle">intent</text><text x="74" y="20" class="count" text-anchor="end">9</text></g>
+    <g transform="translate(88 0)"><rect width="80" height="30" rx="6" fill="#BE185D"/><text x="40" y="20" class="chip" text-anchor="middle">meta</text><text x="74" y="20" class="count" text-anchor="end">2</text></g>
+    <g transform="translate(176 0)"><rect width="80" height="30" rx="6" fill="#BE185D"/><text x="40" y="20" class="chip" text-anchor="middle">assets</text><text x="74" y="20" class="count" text-anchor="end">3</text></g>
+    <g transform="translate(264 0)"><rect width="80" height="30" rx="6" fill="#BE185D"/><text x="40" y="20" class="chip" text-anchor="middle">debug</text><text x="74" y="20" class="count" text-anchor="end">10</text></g>
+    <g transform="translate(352 0)"><rect width="80" height="30" rx="6" fill="#BE185D"/><text x="40" y="20" class="chip" text-anchor="middle">testing</text><text x="74" y="20" class="count" text-anchor="end">6</text></g>
+    <g transform="translate(440 0)"><rect width="80" height="30" rx="6" fill="#BE185D"/><text x="40" y="20" class="chip" text-anchor="middle">dx</text><text x="74" y="20" class="count" text-anchor="end">4</text></g>
+  </g>
+
+  <!-- Total bar -->
+  <g transform="translate(20 318)">
+    <rect width="720" height="28" rx="6" fill="#1F2D3D"/>
+    <text x="14" y="19" class="total">RESOURCES</text>
+    <text x="116" y="19" class="chip">5  ·  godot://editor/context, project/info, scene/{path}, script/{path}, resource/{path}</text>
+  </g>
+  <g transform="translate(20 348)">
+    <rect width="720" height="0" rx="6" fill="none"/>
+  </g>
+</svg>

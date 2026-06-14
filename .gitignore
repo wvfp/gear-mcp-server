@@ -4,6 +4,10 @@ build/
 # Generated binaries in addon (rebuild from source)
 project/addons/gear_mcp/bin/
 
+# Internal planning/agent docs (not part of the published project)
+docs/
+AGENTS.md
+
 # IDE
 .vs/
 .vscode/

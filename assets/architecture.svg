@@ -1,0 +1,107 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 360" role="img" aria-label="Architecture">
+  <defs>
+    <!-- Gradients -->
+    <linearGradient id="client" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#7B61FF"/>
+      <stop offset="1" stop-color="#5A3FD4"/>
+    </linearGradient>
+    <linearGradient id="proxy" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#10B981"/>
+      <stop offset="1" stop-color="#059669"/>
+    </linearGradient>
+    <linearGradient id="server" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#5BA1D6"/>
+      <stop offset="1" stop-color="#2C5F8D"/>
+    </linearGradient>
+    <linearGradient id="godot" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#F59E0B"/>
+      <stop offset="1" stop-color="#D97706"/>
+    </linearGradient>
+    <linearGradient id="api" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#EC4899"/>
+      <stop offset="1" stop-color="#BE185D"/>
+    </linearGradient>
+
+    <!-- Arrow marker -->
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#94A3B8"/>
+    </marker>
+  </defs>
+
+  <!-- Background card -->
+  <rect x="0" y="0" width="760" height="360" rx="12" fill="#F8FAFC"/>
+
+  <style>
+    .label { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 14px; font-weight: 600; fill: #FFFFFF; }
+    .sub { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 11px; fill: #475569; }
+    .proto { font-family: 'SF Mono', Menlo, Consolas, monospace; font-size: 11px; fill: #64748B; }
+    .title { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 13px; font-weight: 700; fill: #1F2D3D; letter-spacing: 0.5px; }
+  </style>
+
+  <!-- AI Client box -->
+  <rect x="20" y="50" width="170" height="100" rx="10" fill="url(#client)"/>
+  <text x="105" y="80" class="label" text-anchor="middle">AI Client</text>
+  <text x="105" y="100" class="label" text-anchor="middle" font-size="11" font-weight="500" opacity="0.9">Claude / Cursor / Cline</text>
+  <text x="105" y="118" class="label" text-anchor="middle" font-size="11" font-weight="500" opacity="0.9">OpenCode / …</text>
+  <text x="105" y="170" class="proto" text-anchor="middle">stdio JSON-RPC 2.0</text>
+
+  <!-- Arrow 1 -->
+  <line x1="195" y1="100" x2="245" y2="100" stroke="#94A3B8" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- gear-mcp-proxy box -->
+  <rect x="250" y="50" width="170" height="100" rx="10" fill="url(#proxy)"/>
+  <text x="335" y="80" class="label" text-anchor="middle">gear-mcp-proxy</text>
+  <text x="335" y="100" class="label" text-anchor="middle" font-size="11" font-weight="500" opacity="0.9">Node.js · ~50 LoC</text>
+  <text x="335" y="118" class="label" text-anchor="middle" font-size="11" font-weight="500" opacity="0.9">stdio ↔ TCP bridge</text>
+  <text x="335" y="170" class="proto" text-anchor="middle">TCP 127.0.0.1:8510</text>
+
+  <!-- Arrow 2 -->
+  <line x1="425" y1="100" x2="475" y2="100" stroke="#94A3B8" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- gear-mcp-server box (C++ GDExtension) -->
+  <rect x="480" y="30" width="260" height="140" rx="10" fill="#1F2D3D"/>
+  <text x="610" y="52" class="label" text-anchor="middle" fill="#7BC0E8">gear-mcp-server</text>
+  <text x="610" y="70" class="label" text-anchor="middle" font-size="10" font-weight="500" fill="#94A3B8" opacity="0.9">C++ GDExtension · in-editor process</text>
+
+  <!-- Inner stack -->
+  <rect x="500" y="84" width="220" height="22" rx="4" fill="url(#server)"/>
+  <text x="610" y="99" class="label" text-anchor="middle" font-size="11">TCPServer · thread-per-conn</text>
+
+  <rect x="500" y="112" width="220" height="22" rx="4" fill="url(#server)" opacity="0.85"/>
+  <text x="610" y="127" class="label" text-anchor="middle" font-size="11">MCPMethods · ToolRegistry</text>
+
+  <rect x="500" y="140" width="220" height="22" rx="4" fill="url(#server)" opacity="0.7"/>
+  <text x="610" y="155" class="label" text-anchor="middle" font-size="11">109 tool handlers · 26 domains</text>
+
+  <text x="610" y="195" class="proto" text-anchor="middle">\n-delimited JSON-RPC</text>
+
+  <!-- Arrow 3 (down to Godot API) -->
+  <line x1="610" y1="210" x2="610" y2="240" stroke="#94A3B8" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Godot Engine process box -->
+  <rect x="480" y="245" width="260" height="50" rx="10" fill="url(#godot)"/>
+  <text x="610" y="268" class="label" text-anchor="middle">Godot Editor process</text>
+  <text x="610" y="285" class="label" text-anchor="middle" font-size="10" font-weight="500" fill="#FFFFFF" opacity="0.9">MainThreadQueue → _process → Godot API</text>
+
+  <!-- Arrow 4 (down to API) -->
+  <line x1="610" y1="305" x2="610" y2="325" stroke="#94A3B8" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Godot C API box -->
+  <rect x="480" y="330" width="260" height="20" rx="6" fill="url(#api)"/>
+  <text x="610" y="344" class="label" text-anchor="middle" font-size="11">godot-cpp · GDExtension C API</text>
+
+  <!-- Legend -->
+  <g transform="translate(20 230)">
+    <text x="0" y="0" class="title">Threading</text>
+    <circle cx="6" cy="20" r="5" fill="url(#server)"/>
+    <text x="18" y="24" class="sub">main_thread handlers (editor frame)</text>
+    <circle cx="6" cy="42" r="5" fill="url(#proxy)"/>
+    <text x="18" y="46" class="sub">main_thread=false (file I/O, INI, HTTP)</text>
+    <text x="0" y="80" class="title">Protocol</text>
+    <text x="0" y="100" class="proto">JSON-RPC 2.0 over TCP / stdio</text>
+    <text x="0" y="118" class="proto">Wire: one message per line (\n)</text>
+  </g>
+
+  <!-- Section title -->
+  <text x="20" y="28" class="title">End-to-end message flow</text>
+</svg>
