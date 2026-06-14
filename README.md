@@ -93,44 +93,69 @@ Override with `GEAR_HOST` / `GEAR_PORT`.
   <img alt="Tool domains" src="assets/tools.svg" width="760">
 </p>
 
-### Core editor (Phase 1 — 44 tools)
+### Files & project (16 tools)
 
 | Domain     | Count | Highlights                                                   |
 | ---------- | :---: | ------------------------------------------------------------ |
 | `file`     |   3   | read, write, list                                            |
-| `scene`    |  10   | open, save, instancing, runtime attach, plus 7 advanced (nodes, properties, signals, groups) |
-| `script`   |   3   | read, write, attach                                          |
-| `classdb`  |   3   | class & property & method introspection                      |
 | `project`  |   5   | settings, autoloads (read), project info, version            |
-| `editor`   |   6   | selection, undo/redo, screenshots, play, stop, reload         |
-| `resource` |   5   | load, save, list, inspect, create                            |
-| `export`   |   2   | presets, run (cross-platform process spawn)                  |
-| `signal`   |   3   | list, connect, emit                                          |
-| `autoload` |   4   | add, remove, list, register                                  |
+| `classdb`  |   3   | class & property & method introspection                      |
+| `import`   |   5   | reimport, list, settings, presets                            |
 
-### Engine systems (Phase 3 — 31 tools)
+### Scene & world (18 tools)
 
 | Domain       | Count | Highlights                                                   |
 | ------------ | :---: | ------------------------------------------------------------ |
-| `animation`  |   5   | create track, add key, set value, play, stop                 |
-| `audio`      |   4   | bus, stream player, generate tone, listener                  |
+| `scene`      |  10   | open, save, instancing, runtime attach, plus 7 advanced (nodes, properties, signals, groups) |
+| `runtime`    |   4   | spawn scene, set var, get var, await signal                  |
 | `tilemap`    |   2   | set / get cell                                                |
 | `navigation` |   2   | map regions, agent path                                      |
-| `theme`      |   3   | create, apply, list                                          |
-| `plugin`     |   3   | enable, disable, list                                        |
-| `input`      |   1   | action map                                                    |
-| `uid`        |   2   | generate, resolve                                            |
-| `import`     |   5   | reimport, list, settings, presets                            |
-| `runtime`    |   4   | spawn scene, set var, get var, await signal                  |
 
-### AI workflow (Phase 4 — 34 tools)
+### Code & debug (13 tools)
+
+| Domain   | Count | Highlights                                                   |
+| -------- | :---: | ------------------------------------------------------------ |
+| `script` |   3   | read, write, attach                                          |
+| `debug`  |  10   | LSP: diagnostics, hover, completion, definition · DAP: breakpoint, step, continue, variables, stack, evaluate |
+
+### Editor & plugin (19 tools)
+
+| Domain     | Count | Highlights                                                   |
+| ---------- | :---: | ------------------------------------------------------------ |
+| `editor`   |   6   | selection, undo/redo, screenshots, play, stop, reload         |
+| `autoload` |   4   | add, remove, list, register                                  |
+| `plugin`   |   3   | enable, disable, list                                        |
+| `signal`   |   3   | list, connect, emit                                          |
+| `theme`    |   3   | create, apply, list                                          |
+
+### Media (14 tools)
+
+| Domain      | Count | Highlights                                                   |
+| ----------- | :---: | ------------------------------------------------------------ |
+| `resource`  |   5   | load, save, list, inspect, create                            |
+| `audio`     |   4   | bus, stream player, generate tone, listener                  |
+| `animation` |   5   | create track, add key, set value, play, stop                 |
+
+### Input & identity (3 tools)
+
+| Domain  | Count | Highlights      |
+| ------- | :---: | --------------- |
+| `input` |   1   | action map      |
+| `uid`   |   2   | generate, resolve |
+
+### Build & export (2 tools)
+
+| Domain   | Count | Highlights                                          |
+| -------- | :---: | --------------------------------------------------- |
+| `export` |   2   | presets, run (cross-platform process spawn)        |
+
+### AI workflow (24 tools)
 
 | Domain    | Count | Highlights                                                   |
 | --------- | :---: | ------------------------------------------------------------ |
 | `intent`  |   9   | snapshots, decision log, work steps, traces, recording toggle, summarize, handoff |
 | `meta`    |   2   | tool catalog, schema lookup                                  |
 | `assets`  |   3   | CC0 downloads: Poly Haven, AmbientCG, Kenney                |
-| `debug`   |  10   | LSP: diagnostics, hover, completion, definition · DAP: breakpoint, step, continue, variables, stack, evaluate |
 | `testing` |   6   | inject input, capture screenshot, headless run, log assertion |
 | `dx`      |   4   | project health, lint, file index, symbol index              |
 
