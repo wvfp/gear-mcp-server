@@ -21,15 +21,3 @@ enabled=PackedStringArray("res://addons/gear_mcp/plugin.cfg")
 [physics]
 
 3d/physics_engine="Jolt Physics"
-
-[rendering]
-
-rendering_device/driver.windows="d3d12"
-
-[input]
-
-
-
-[input]
-
-

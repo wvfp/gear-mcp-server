@@ -129,15 +129,17 @@ static void handle_capture_screenshot(const std::string &p_params_json, std::str
     GDExtensionObjectPtr img = GodotAPI::call_method_object_with_args(tex, "get_image", nullptr, 0);
     if (!img) { r_error = "Failed to get image from viewport texture"; return; }
 
-    // img.save_png(path)
+    // img.save_png(path) — returns an Error code. Capture it so we can
+    // report actual failures instead of guessing from a missing file.
     uint8_t vb[64] = {0};
     GodotAPI::make_variant_string((GDExtensionUninitializedVariantPtr)vb, abs);
     GDExtensionConstVariantPtr args[] = { (GDExtensionConstVariantPtr)vb };
-    GodotAPI::call_method_void(img, "save_png", args, 1);
+    int save_err = GodotAPI::call_method_int_with_args(img, "save_png", args, 1);
     GodotAPI::destroy_variant((GDExtensionVariantPtr)vb);
 
     if (!fs::exists(abs, ec)) {
-        r_error = "save_png did not produce a file at " + abs;
+        r_error = "save_png did not produce a file at " + abs +
+                  " (save_png returned Error=" + std::to_string(save_err) + ")";
         return;
     }
     int64_t size = fs::file_size(abs, ec);

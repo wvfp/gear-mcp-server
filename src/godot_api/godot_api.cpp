@@ -615,6 +615,75 @@ GDExtensionObjectPtr GodotAPI::get_editor_undo_redo() {
 }
 
 std::string GodotAPI::get_project_path() {
+    // Primary path: call ProjectSettings.globalize_path("res://") through the
+    // GDExtension C API. This is the documented, CWD-independent way to
+    // resolve a project's filesystem root regardless of how Godot was launched.
+    //
+    // Fallback: use CWD. This is what we used to do and it is fragile (only
+    // correct if the launcher happened to `cd` into the project directory),
+    // but we keep it as a last resort in case the C API is unavailable during
+    // early initialization.
+    if (s_global_get_singleton && s_classdb_get_method_bind && s_object_method_bind_call
+            && s_string_name_new_latin1 && s_string_name_destructor
+            && s_variant_new_nil && s_variant_destroy) {
+        uint8_t class_sn[8] = {0};
+        uint8_t method_sn[8] = {0};
+        make_string_name(class_sn, "ProjectSettings");
+        make_string_name(method_sn, "globalize_path");
+
+        GDExtensionObjectPtr ps = s_global_get_singleton((GDExtensionConstStringNamePtr)class_sn);
+
+        if (ps) {
+            GDExtensionMethodBindPtr bind = s_classdb_get_method_bind(
+                (GDExtensionConstStringNamePtr)class_sn,
+                (GDExtensionConstStringNamePtr)method_sn,
+                3135753539ULL  // hash from godot-cpp/gdextension/extension_api-4-6.json
+                               //  for ProjectSettings.globalize_path(String) -> String.
+                               // Hash 0 is rejected by Godot 4.6 because the method's
+                               // signature changed and the runtime wants an exact hash
+                               // ("Method 'X' has changed and no compatibility fallback
+                               // has been provided").
+            );
+
+            if (bind) {
+                uint8_t arg_buf[VARIANT_BUF_SIZE] = {0};
+                make_variant_string((GDExtensionUninitializedVariantPtr)arg_buf, "res://");
+                GDExtensionConstVariantPtr args[] = { (GDExtensionConstVariantPtr)arg_buf };
+
+                uint8_t ret_buf[VARIANT_BUF_SIZE] = {0};
+                s_variant_new_nil((GDExtensionUninitializedVariantPtr)ret_buf);
+                GDExtensionCallError err = {};
+                s_object_method_bind_call(
+                    bind, ps, args, 1,
+                    (GDExtensionUninitializedVariantPtr)ret_buf, &err);
+
+                std::string result;
+                if (err.error == GDEXTENSION_CALL_OK) {
+                    result = variant_to_string((GDExtensionConstVariantPtr)ret_buf);
+                }
+                s_variant_destroy((GDExtensionVariantPtr)ret_buf);
+                s_variant_destroy((GDExtensionVariantPtr)arg_buf);
+
+                if (s_string_name_destructor) s_string_name_destructor((GDExtensionStringNamePtr)method_sn);
+                if (s_string_name_destructor) s_string_name_destructor((GDExtensionStringNamePtr)class_sn);
+
+                if (!result.empty()) {
+                    return result;
+                }
+                // fall through to CWD fallback below
+            } else {
+                if (s_string_name_destructor) s_string_name_destructor((GDExtensionStringNamePtr)method_sn);
+                if (s_string_name_destructor) s_string_name_destructor((GDExtensionStringNamePtr)class_sn);
+            }
+        } else {
+            if (s_string_name_destructor) s_string_name_destructor((GDExtensionStringNamePtr)method_sn);
+            if (s_string_name_destructor) s_string_name_destructor((GDExtensionStringNamePtr)class_sn);
+        }
+    }
+
+    // Fallback: CWD. This is wrong if Godot was launched from a directory
+    // other than the project root, but it is the only option before the
+    // GDExtension C API is fully initialized.
     char cwd_buf[4096];
 #ifdef _MSC_VER
     if (_getcwd(cwd_buf, sizeof(cwd_buf)) != nullptr) {
@@ -628,7 +697,12 @@ std::string GodotAPI::get_project_path() {
 
 std::string GodotAPI::res_to_absolute(const std::string &p_res_path) {
     if (p_res_path.size() >= 6 && p_res_path.substr(0, 6) == "res://") {
-        return get_project_path() + "/" + p_res_path.substr(6);
+        std::string project = get_project_path();
+        // Strip trailing slash/separator to avoid "//" in the joined path.
+        while (!project.empty() && (project.back() == '/' || project.back() == '\\')) {
+            project.pop_back();
+        }
+        return project + "/" + p_res_path.substr(6);
     }
     return p_res_path;
 }

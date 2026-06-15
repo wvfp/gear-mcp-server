@@ -194,6 +194,8 @@ gear-mcp-server/
 ├── proxy/                      # Node.js stdio↔TCP 桥接
 │   ├── index.js
 │   └── package.json
+├── contrib/
+│   └── agent-skill/            # AI 代理 skill（可拷贝到 IDE 的 skills/ 目录）
 ├── src/
 │   ├── register_types.cpp      # GDExtension 入口（仅编辑器模式）
 │   ├── gear_main_thread_node.* # EditorProcessFrame 桥接
@@ -221,6 +223,13 @@ gear-mcp-server/
 | `cpp-httplib`    | 0.18.7        | CC0 资产下载的 HTTP 客户端         |
 | `inih`           | r58           | `project.godot` INI 解析器     |
 | `ws2_32`         | —             | Windows 上的 TCP socket        |
+
+## 给 AI 代理的使用指南
+
+`contrib/agent-skill/SKILL.md` 是一份 Trae / Claude / Cursor skill，
+教 AI 代理怎么用 MCP 工具驱动本项目——包括标准工作流、截图管道、
+7 个常见坑和 editor 卡住时的恢复步骤。把 `contrib/agent-skill/`
+整目录复制到 IDE 的 skill 目录（如 `~/.trae-cn/builtin/global/skills/`）即可加载。
 
 ## 许可证
 

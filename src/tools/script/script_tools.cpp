@@ -18,15 +18,51 @@ static void create_script(const std::string &p_params_json, std::string &r_resul
         std::string extends = params.value("extends", "Node");
         std::string content = params.value("content", "");
 
-        std::string full_path = path_utils::normalize(script_path);
+        std::string full_path = GodotAPI::res_to_absolute(script_path);
         if (!path_utils::ensure_parent_dirs(full_path)) {
             r_error = "Failed to create parent directories for: " + script_path;
             return;
         }
 
+        // Strip leading "class_name X" / "extends X" lines from content if the
+        // caller already included them. create_script always writes its own
+        // header, and Godot's GDScript parser rejects duplicate "extends" lines
+        // with: Parse Error: "extends" can only be used once.
+        auto strip_leading_directive = [](std::string &s, const std::string &keyword) {
+            // Skip leading blank lines / comments
+            size_t pos = 0;
+            while (pos < s.size()) {
+                size_t line_end = s.find('\n', pos);
+                if (line_end == std::string::npos) line_end = s.size();
+                std::string line = s.substr(pos, line_end - pos);
+                // trim leading whitespace
+                size_t first = line.find_first_not_of(" \t\r");
+                if (first == std::string::npos || line[first] == '#') {
+                    // blank or comment line — skip
+                    pos = (line_end < s.size()) ? line_end + 1 : s.size();
+                    continue;
+                }
+                if (line.compare(first, keyword.size(), keyword) == 0
+                        && first + keyword.size() < line.size()
+                        && (line[first + keyword.size()] == ' ' || line[first + keyword.size()] == '\t')) {
+                    // it's a "class_name X" or "extends X" line — strip it
+                    s.erase(pos, line_end - pos);
+                    // also strip the trailing newline if any
+                    if (pos < s.size() && s[pos] == '\n') s.erase(pos, 1);
+                    return; // only strip one leading directive of this type
+                }
+                break;
+            }
+        };
+
+        std::string clean_content = content;
+        strip_leading_directive(clean_content, "class_name");
+        strip_leading_directive(clean_content, "extends");
+
         std::ofstream file(full_path);
         if (!file.is_open()) {
-            r_error = "Failed to create script file: " + script_path;
+            // include the resolved path so the error is actually useful
+            r_error = "Failed to create script file: " + script_path + " (resolved: " + full_path + ")";
             return;
         }
 
@@ -34,8 +70,8 @@ static void create_script(const std::string &p_params_json, std::string &r_resul
             file << "class_name " << class_name << "\n";
         }
         file << "extends " << extends << "\n";
-        if (!content.empty()) {
-            file << "\n" << content;
+        if (!clean_content.empty()) {
+            file << "\n" << clean_content;
         }
 
         file.close();
@@ -59,7 +95,7 @@ static void modify_script(const std::string &p_params_json, std::string &r_resul
         std::string append = params.value("append", "");
         std::string mode = params.value("mode", "write");
 
-        std::string full_path = path_utils::normalize(script_path);
+        std::string full_path = GodotAPI::res_to_absolute(script_path);
         std::ofstream::openmode flags = std::ofstream::out;
         if (mode == "append") {
             flags |= std::ofstream::app;
@@ -67,7 +103,7 @@ static void modify_script(const std::string &p_params_json, std::string &r_resul
 
         std::ofstream file(full_path, flags);
         if (!file.is_open()) {
-            r_error = "Failed to open script file: " + script_path;
+            r_error = "Failed to open script file: " + script_path + " (resolved: " + full_path + ")";
             return;
         }
 
@@ -96,7 +132,7 @@ static void get_script_info(const std::string &p_params_json, std::string &r_res
         json params = json::parse(p_params_json);
         std::string script_path = params.at("script_path").get<std::string>();
 
-        std::string full_path = path_utils::normalize(script_path);
+        std::string full_path = GodotAPI::res_to_absolute(script_path);
         std::ifstream file(full_path);
         if (!file.is_open()) {
             r_error = "Failed to open script file: " + script_path;

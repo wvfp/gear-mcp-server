@@ -294,17 +294,77 @@ void TCPServer::_accept_thread() {
             char buf[4096];
             std::string line_buffer;
 
+            // ----------------------------------------------------------------
+            // Buffer-boundary JSON parser
+            //
+            // We previously split messages on '\n', which broke for any
+            // pretty-printed JSON containing newlines inside a string value
+            // (e.g. GDScript source passed as "content"). Instead, we
+            // accumulate bytes into line_buffer and extract the next
+            // depth-balanced top-level {...} object, properly skipping over
+            // strings (and backslash-escaped chars inside them).
+            // ----------------------------------------------------------------
+            auto extract_next_message = [](std::string &buf) -> std::string {
+                // Skip leading whitespace
+                size_t start = 0;
+                while (start < buf.size() &&
+                       (buf[start] == ' ' || buf[start] == '\t' ||
+                        buf[start] == '\r' || buf[start] == '\n')) {
+                    ++start;
+                }
+                if (start >= buf.size()) {
+                    buf.clear();
+                    return std::string();
+                }
+                // Non-JSON garbage up to next newline: skip
+                if (buf[start] != '{') {
+                    size_t nl = buf.find('\n', start);
+                    if (nl == std::string::npos) {
+                        buf.clear();
+                        return std::string();
+                    }
+                    buf.erase(0, nl + 1);
+                    return std::string();
+                }
+                // Scan for balanced '}' at depth 0, respecting strings.
+                int depth = 0;
+                bool in_string = false;
+                bool escaped = false;
+                size_t end = std::string::npos;
+                for (size_t i = start; i < buf.size(); ++i) {
+                    char ch = buf[i];
+                    if (escaped) { escaped = false; continue; }
+                    if (ch == '\\') { escaped = true; continue; }
+                    if (ch == '"') { in_string = !in_string; continue; }
+                    if (in_string) continue;
+                    if (ch == '{') ++depth;
+                    else if (ch == '}') {
+                        --depth;
+                        if (depth == 0) { end = i; break; }
+                    }
+                }
+                if (end == std::string::npos) {
+                    // Incomplete message: keep the partial bytes and wait
+                    // for more data on the next recv().
+                    std::string remaining = buf.substr(start);
+                    buf = std::move(remaining);
+                    return std::string();
+                }
+                std::string msg = buf.substr(start, end - start + 1);
+                buf.erase(0, end + 1);
+                return msg;
+            };
+
             while (true) {
                 int n = recv(fd, buf, sizeof(buf) - 1, 0);
                 if (n <= 0) break;
                 buf[n] = '\0';
                 line_buffer.append(buf, (size_t)n);
 
-                size_t pos;
-                while ((pos = line_buffer.find('\n')) != std::string::npos) {
-                    std::string msg = line_buffer.substr(0, pos);
-                    line_buffer.erase(0, pos + 1);
-                    if (msg.empty() || msg.find_first_not_of(" \t\r\n") == std::string::npos) continue;
+                // Drain as many complete messages as the buffer holds.
+                while (true) {
+                    std::string msg = extract_next_message(line_buffer);
+                    if (msg.empty()) break;
                     if (handler) {
                         std::string response = handler(msg);
                         if (!response.empty()) {
@@ -340,17 +400,66 @@ void TCPServer::_accept_thread() {
             char buf[4096];
             std::string line_buffer;
 
+            // Buffer-boundary JSON parser: extract the next depth-balanced
+            // top-level {...} object, properly skipping over strings
+            // (and backslash-escaped chars inside them). This makes the
+            // server tolerant of pretty-printed JSON that contains literal
+            // newlines inside string values.
+            auto extract_next_message = [](std::string &buf) -> std::string {
+                size_t start = 0;
+                while (start < buf.size() &&
+                       (buf[start] == ' ' || buf[start] == '\t' ||
+                        buf[start] == '\r' || buf[start] == '\n')) {
+                    ++start;
+                }
+                if (start >= buf.size()) {
+                    buf.clear();
+                    return std::string();
+                }
+                if (buf[start] != '{') {
+                    size_t nl = buf.find('\n', start);
+                    if (nl == std::string::npos) {
+                        buf.clear();
+                        return std::string();
+                    }
+                    buf.erase(0, nl + 1);
+                    return std::string();
+                }
+                int depth = 0;
+                bool in_string = false;
+                bool escaped = false;
+                size_t end = std::string::npos;
+                for (size_t i = start; i < buf.size(); ++i) {
+                    char ch = buf[i];
+                    if (escaped) { escaped = false; continue; }
+                    if (ch == '\\') { escaped = true; continue; }
+                    if (ch == '"') { in_string = !in_string; continue; }
+                    if (in_string) continue;
+                    if (ch == '{') ++depth;
+                    else if (ch == '}') {
+                        --depth;
+                        if (depth == 0) { end = i; break; }
+                    }
+                }
+                if (end == std::string::npos) {
+                    std::string remaining = buf.substr(start);
+                    buf = std::move(remaining);
+                    return std::string();
+                }
+                std::string msg = buf.substr(start, end - start + 1);
+                buf.erase(0, end + 1);
+                return msg;
+            };
+
             while (true) {
                 ssize_t n = recv(fd, buf, sizeof(buf) - 1, 0);
                 if (n <= 0) break;
                 buf[n] = '\0';
                 line_buffer.append(buf, (size_t)n);
 
-                size_t pos;
-                while ((pos = line_buffer.find('\n')) != std::string::npos) {
-                    std::string msg = line_buffer.substr(0, pos);
-                    line_buffer.erase(0, pos + 1);
-                    if (msg.empty() || msg.find_first_not_of(" \t\r\n") == std::string::npos) continue;
+                while (true) {
+                    std::string msg = extract_next_message(line_buffer);
+                    if (msg.empty()) break;
                     if (handler) {
                         std::string response = handler(msg);
                         if (!response.empty()) {

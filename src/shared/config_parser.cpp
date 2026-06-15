@@ -236,13 +236,64 @@ bool set_project_setting(const std::string &p_project_path, const std::string &p
 
     // Find or create the section
     std::string section_header = "[" + p_section + "]";
-    std::string key_line = p_key + "=" + p_value + "\n";
+
+    // Godot's ConfigFile requires string values to be wrapped in double
+    // quotes. Detect whether the existing entry was quoted, and if so,
+    // also quote the replacement. For new entries, quote anything that
+    // is not a bare token (number, boolean, or simple identifier) so
+    // the parser does not choke.
+    auto needs_quotes = [](const std::string &v) -> bool {
+        if (v.empty()) return false;
+        // Already wrapped
+        if (v.size() >= 2 && v.front() == '"' && v.back() == '"') return false;
+        if (v.front() == '"') return true;
+        // Bare tokens that the INI parser accepts unquoted
+        static const char *bare_ok[] = {
+            "true", "false", "null", "Inf", "NaN", "self", "Resource"
+        };
+        for (const char *tok : bare_ok) {
+            if (v == tok) return false;
+        }
+        // Pure numbers
+        bool seen_dot = false;
+        size_t i = 0;
+        if (v[0] == '-' || v[0] == '+') i = 1;
+        bool any_digit = false;
+        for (; i < v.size(); ++i) {
+            char c = v[i];
+            if (c >= '0' && c <= '9') { any_digit = true; continue; }
+            if ((c == '.' || c == 'e' || c == 'E' || c == '+' || c == '-') && !seen_dot) {
+                if (c == '.') seen_dot = true;
+                continue;
+            }
+            // Contains a non-numeric, non-token char -> needs quotes
+            return true;
+        }
+        return !any_digit; // all-letters word like "vulkan" -> needs quotes
+    };
+
+    auto format_value = [&](const std::string &existing_line_value, const std::string &new_value) -> std::string {
+        // existing_line_value is the substring between '=' and end-of-line
+        // (excluding the trailing newline). Detect if it was quoted.
+        bool was_quoted = !existing_line_value.empty() &&
+                          existing_line_value.front() == '"';
+        std::string inner = new_value;
+        // Strip any quotes the caller included so we control them.
+        if (inner.size() >= 2 && inner.front() == '"' && inner.back() == '"') {
+            inner = inner.substr(1, inner.size() - 2);
+        }
+        if (was_quoted || needs_quotes(inner)) {
+            return std::string("\"") + inner + "\"";
+        }
+        return inner;
+    };
 
     size_t section_pos = content.find(section_header);
     if (section_pos == std::string::npos) {
         // Section doesn't exist, add it at the end
         if (!content.empty() && content.back() != '\n') content += "\n";
-        content += "\n" + section_header + "\n" + key_line;
+        std::string new_value = format_value("", p_value);
+        content += "\n" + section_header + "\n" + p_key + "=" + new_value + "\n";
     } else {
         // Find the next section or end of file
         size_t next_section = content.find("\n[", section_pos + section_header.size());
@@ -253,15 +304,20 @@ bool set_project_setting(const std::string &p_project_path, const std::string &p
         size_t key_pos = content.find(key_prefix, section_pos + section_header.size());
 
         if (key_pos != std::string::npos && key_pos < next_section) {
-            // Key exists, replace its line
+            // Key exists, replace its line. Capture the existing value
+            // (between '=' and the line terminator) to detect quoting.
+            size_t val_start = key_pos + key_prefix.size();
             size_t line_end = content.find('\n', key_pos);
             if (line_end == std::string::npos) line_end = content.size();
-            content.replace(key_pos, line_end - key_pos, p_key + "=" + p_value);
+            std::string existing_value = content.substr(val_start, line_end - val_start);
+            std::string new_value = format_value(existing_value, p_value);
+            content.replace(key_pos, line_end - key_pos, p_key + "=" + new_value);
         } else {
             // Key doesn't exist, add it after the section header
             size_t insert_pos = section_pos + section_header.size();
             if (insert_pos < content.size() && content[insert_pos] == '\n') insert_pos++;
-            content.insert(insert_pos, key_line);
+            std::string new_value = format_value("", p_value);
+            content.insert(insert_pos, p_key + "=" + new_value + "\n");
         }
     }
 

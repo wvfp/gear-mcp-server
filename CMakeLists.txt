@@ -153,6 +153,7 @@ target_sources(${TARGET_NAME} PRIVATE
 # Source root is an include directory so we can use #include "server/xxx.h" etc.
 target_include_directories(${TARGET_NAME} PRIVATE
     ${CMAKE_SOURCE_DIR}/src
+    ${CMAKE_SOURCE_DIR}/godot-cpp/include
 )
 
 # Link all dependencies
